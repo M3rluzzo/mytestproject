@@ -11,6 +11,7 @@ class EnvironmentData():
         self.log: Logger = log
         self.observation = None
         self.legal_moves = None
+        self.illegal_move_reward = -1
         self.array_everything = None
         self.reward = None
         self.info = None

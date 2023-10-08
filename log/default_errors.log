@@ -1,0 +1,15 @@
+2023-10-08 17:42:11,538 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 17:43:00,362 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 17:44:34,304 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 17:47:29,265 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 21:18:54,785 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.

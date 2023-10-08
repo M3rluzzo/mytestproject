@@ -1,4 +1,5 @@
 import logging
+import time
 import numpy as np
 import tensorflow as tf
 import json
@@ -10,6 +11,7 @@ from rl.policy import BoltzmannQPolicy
 from rl.memory import SequentialMemory
 from rl.agents import DQNAgent
 from rl.core import Processor
+from classes.models.enums import Action
 
 autoplay = True
 window_length = 1
@@ -38,9 +40,9 @@ class Player:
     def initiate_agent(self, env):
         tf.compat.v1.disable_eager_execution()
         self.env = env
-        nb_actions = self.env.action_space.n
+        nb_actions = self.env.environment_manager.action_space.n
         self.model = Sequential()
-        self.model.add(Dense(512, activation='relu', input_shape=env.observation_space))
+        self.model.add(Dense(512, activation='relu', input_shape=env.environment_manager.data.observation_space))
         self.model.add(Dropout(0.2))
         self.model.add(Dense(512, activation='relu'))
         self.model.add(Dropout(0.2))
@@ -49,7 +51,7 @@ class Player:
         self.model.add(Dense(nb_actions, activation='linear'))
         memory = SequentialMemory(limit=memory_limit, window_length=window_length)
         policy = TrumpPolicy()
-        nb_actions = env.action_space.n
+        nb_actions = env.environment_manager.action_space.n
         self.dqn = DQNAgent(model=self.model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=nb_steps_warmup,
                             target_model_update=1e-2, policy=policy,
                             processor=CustomProcessor(),
@@ -58,7 +60,7 @@ class Player:
     def start_step_policy(self, observation):
         log.info("Random action")
         _ = observation
-        action = self.env.action_space.sample()
+        action = self.env.environment_manager.action_space.sample()
         return action
     def train(self, env_name):
         timestr = time.strftime("%Y%m%d-%H%M%S") + "_" + str(env_name)
@@ -87,7 +89,7 @@ class Player:
                 if 'stack' in processed_info:
                     processed_info = {'x': 1}
                 return processed_info
-        nb_actions = self.env.action_space.n
+        nb_actions = self.env.environment_manager.action_space.n
         self.dqn = DQNAgent(model=self.model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=nb_steps_warmup,
                             target_model_update=1e-2, policy=policy,
                             processor=CustomProcessor(),

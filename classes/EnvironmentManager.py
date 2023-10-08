@@ -16,7 +16,6 @@ class EnvironmentManager:
         self.second_round = False
         self.action_space = Discrete(len(Action) - 2)
         self.done = False
-        self.illegal_move_reward = -1
         self.winner_ix = None
         self.acting_agent = None        
         self.player_manager: PlayerManager = player_manager
@@ -254,7 +253,7 @@ class EnvironmentManager:
 
         """
         # loop over step function, calling the agent's action method
-        # until either the env id sone, or an agent is just a shell and
+        # until either the env id done, or an agent is just a shell and
         # and will get a call from to the step function externally (e.g. via
         # keras-rl
         self.data.reward = 0
@@ -305,7 +304,7 @@ class EnvironmentManager:
         elif len(self.player_manager.funds_history) > 1:
             self.reward = self.player_manager.funds_history.iloc[-1, self.acting_agent] - self.player_manager.funds_history.iloc[
                 -2, self.acting_agent]
-
+            self.log.debug(f"Keras-rl agent has reward {self.reward}")
         else:
             pass
     def reset_pots(self):

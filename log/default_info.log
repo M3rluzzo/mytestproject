@@ -450,3 +450,95 @@
 2023-10-08 11:18:16,789 - INFO - EnvironmentManager.py - game_over - 170 - 1    1
 dtype: int64
 2023-10-08 11:18:16,790 - INFO - EnvironmentManager.py - game_over - 171 - Best Player: 1
+2023-10-08 20:56:06,351 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 20:58:31,287 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 20:59:04,378 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 20:59:22,198 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:00:12,292 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:00:58,764 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:03:26,249 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:07:20,261 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:08:54,093 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:09:56,268 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:11:28,302 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:11:29,257 - INFO - EnvironmentManager.py - start_new_hand - 125 - 
+2023-10-08 21:11:29,258 - INFO - EnvironmentManager.py - start_new_hand - 126 - ++++++++++++++++++ Starting new hand ++++++++++++++++++
+2023-10-08 21:11:29,259 - INFO - EnvironmentManager.py - start_new_hand - 149 - Dealer is at position 0
+2023-10-08 21:11:29,259 - INFO - CardManager.py - distribute_cards - 22 - Player 0 got ['KD', '2H'] and $500
+2023-10-08 21:11:29,260 - INFO - CardManager.py - distribute_cards - 22 - Player 1 got ['9D', 'JC'] and $500
+2023-10-08 21:11:29,260 - INFO - CardManager.py - distribute_cards - 22 - Player 2 got ['QD', '6H'] and $500
+2023-10-08 21:11:29,261 - INFO - CardManager.py - distribute_cards - 22 - Player 3 got ['7D', 'AD'] and $500
+2023-10-08 21:11:29,261 - INFO - CardManager.py - distribute_cards - 22 - Player 4 got ['8D', 'JS'] and $500
+2023-10-08 21:11:29,262 - INFO - CardManager.py - distribute_cards - 22 - Player 5 got ['JH', '4H'] and $500
+2023-10-08 21:11:29,262 - INFO - EnvironmentManager.py - start_new_round - 32 - 
+2023-10-08 21:11:29,262 - INFO - EnvironmentManager.py - start_new_round - 33 - ===Round: Stage: PREFLOP
+2023-10-08 21:11:29,263 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 1 (equity/20/30): Action.SMALL_BLIND - Remaining stack: 499, Round pot: 1, Community pot: 0, player pot: 1
+2023-10-08 21:11:29,263 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 2 (Random): Action.BIG_BLIND - Remaining stack: 498, Round pot: 3, Community pot: 0, player pot: 2
+2023-10-08 21:11:29,475 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 3 (Random): Action.RAISE_2POT - Remaining stack: 494, Round pot: 9, Community pot: 0, player pot: 6
+2023-10-08 21:11:29,680 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 4 (Random): Action.FOLD - Remaining stack: 500, Round pot: 9, Community pot: 0, player pot: 0
+2023-10-08 21:13:28,080 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:13:29,010 - INFO - EnvironmentManager.py - start_new_hand - 125 - 
+2023-10-08 21:13:29,011 - INFO - EnvironmentManager.py - start_new_hand - 126 - ++++++++++++++++++ Starting new hand ++++++++++++++++++
+2023-10-08 21:13:29,011 - INFO - EnvironmentManager.py - start_new_hand - 149 - Dealer is at position 0
+2023-10-08 21:13:29,012 - INFO - CardManager.py - distribute_cards - 22 - Player 0 got ['KD', '2H'] and $500
+2023-10-08 21:13:29,012 - INFO - CardManager.py - distribute_cards - 22 - Player 1 got ['9D', 'JC'] and $500
+2023-10-08 21:13:29,013 - INFO - CardManager.py - distribute_cards - 22 - Player 2 got ['QD', '6H'] and $500
+2023-10-08 21:13:29,013 - INFO - CardManager.py - distribute_cards - 22 - Player 3 got ['7D', 'AD'] and $500
+2023-10-08 21:13:29,014 - INFO - CardManager.py - distribute_cards - 22 - Player 4 got ['8D', 'JS'] and $500
+2023-10-08 21:13:29,014 - INFO - CardManager.py - distribute_cards - 22 - Player 5 got ['JH', '4H'] and $500
+2023-10-08 21:13:29,015 - INFO - EnvironmentManager.py - start_new_round - 32 - 
+2023-10-08 21:13:29,015 - INFO - EnvironmentManager.py - start_new_round - 33 - ===Round: Stage: PREFLOP
+2023-10-08 21:13:29,016 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 1 (equity/20/30): Action.SMALL_BLIND - Remaining stack: 499, Round pot: 1, Community pot: 0, player pot: 1
+2023-10-08 21:13:29,016 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 2 (Random): Action.BIG_BLIND - Remaining stack: 498, Round pot: 3, Community pot: 0, player pot: 2
+2023-10-08 21:13:29,222 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 3 (Random): Action.FOLD - Remaining stack: 500, Round pot: 3, Community pot: 0, player pot: 0
+2023-10-08 21:13:29,397 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 4 (Random): Action.FOLD - Remaining stack: 500, Round pot: 3, Community pot: 0, player pot: 0
+2023-10-08 21:15:28,109 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:15:29,048 - INFO - EnvironmentManager.py - start_new_hand - 125 - 
+2023-10-08 21:15:29,048 - INFO - EnvironmentManager.py - start_new_hand - 126 - ++++++++++++++++++ Starting new hand ++++++++++++++++++
+2023-10-08 21:15:29,049 - INFO - EnvironmentManager.py - start_new_hand - 149 - Dealer is at position 0
+2023-10-08 21:15:29,049 - INFO - CardManager.py - distribute_cards - 22 - Player 0 got ['KD', '2H'] and $500
+2023-10-08 21:15:29,050 - INFO - CardManager.py - distribute_cards - 22 - Player 1 got ['9D', 'JC'] and $500
+2023-10-08 21:15:29,050 - INFO - CardManager.py - distribute_cards - 22 - Player 2 got ['QD', '6H'] and $500
+2023-10-08 21:15:29,051 - INFO - CardManager.py - distribute_cards - 22 - Player 3 got ['7D', 'AD'] and $500
+2023-10-08 21:15:29,051 - INFO - CardManager.py - distribute_cards - 22 - Player 4 got ['8D', 'JS'] and $500
+2023-10-08 21:15:29,052 - INFO - CardManager.py - distribute_cards - 22 - Player 5 got ['JH', '4H'] and $500
+2023-10-08 21:15:29,052 - INFO - EnvironmentManager.py - start_new_round - 32 - 
+2023-10-08 21:15:29,053 - INFO - EnvironmentManager.py - start_new_round - 33 - ===Round: Stage: PREFLOP
+2023-10-08 21:15:29,053 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 1 (equity/20/30): Action.SMALL_BLIND - Remaining stack: 499, Round pot: 1, Community pot: 0, player pot: 1
+2023-10-08 21:15:29,054 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 2 (Random): Action.BIG_BLIND - Remaining stack: 498, Round pot: 3, Community pot: 0, player pot: 2
+2023-10-08 21:15:29,258 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 3 (Random): Action.CALL - Remaining stack: 498, Round pot: 5, Community pot: 0, player pot: 2
+2023-10-08 21:15:29,462 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 4 (Random): Action.CALL - Remaining stack: 498, Round pot: 7, Community pot: 0, player pot: 2
+2023-10-08 21:18:52,376 - INFO - main.py - command_line_parser - 44 - Initializing program
+2023-10-08 21:18:53,309 - INFO - EnvironmentManager.py - start_new_hand - 125 - 
+2023-10-08 21:18:53,309 - INFO - EnvironmentManager.py - start_new_hand - 126 - ++++++++++++++++++ Starting new hand ++++++++++++++++++
+2023-10-08 21:18:53,310 - INFO - EnvironmentManager.py - start_new_hand - 149 - Dealer is at position 0
+2023-10-08 21:18:53,310 - INFO - CardManager.py - distribute_cards - 22 - Player 0 got ['KD', '2H'] and $500
+2023-10-08 21:18:53,311 - INFO - CardManager.py - distribute_cards - 22 - Player 1 got ['9D', 'JC'] and $500
+2023-10-08 21:18:53,311 - INFO - CardManager.py - distribute_cards - 22 - Player 2 got ['QD', '6H'] and $500
+2023-10-08 21:18:53,312 - INFO - CardManager.py - distribute_cards - 22 - Player 3 got ['7D', 'AD'] and $500
+2023-10-08 21:18:53,312 - INFO - CardManager.py - distribute_cards - 22 - Player 4 got ['8D', 'JS'] and $500
+2023-10-08 21:18:53,313 - INFO - CardManager.py - distribute_cards - 22 - Player 5 got ['JH', '4H'] and $500
+2023-10-08 21:18:53,313 - INFO - EnvironmentManager.py - start_new_round - 32 - 
+2023-10-08 21:18:53,314 - INFO - EnvironmentManager.py - start_new_round - 33 - ===Round: Stage: PREFLOP
+2023-10-08 21:18:53,314 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 1 (equity/20/30): Action.SMALL_BLIND - Remaining stack: 499, Round pot: 1, Community pot: 0, player pot: 1
+2023-10-08 21:18:53,315 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 2 (Random): Action.BIG_BLIND - Remaining stack: 498, Round pot: 3, Community pot: 0, player pot: 2
+2023-10-08 21:18:53,519 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 3 (Random): Action.CALL - Remaining stack: 498, Round pot: 5, Community pot: 0, player pot: 2
+2023-10-08 21:18:53,711 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 4 (Random): Action.RAISE_2POT - Remaining stack: 490, Round pot: 15, Community pot: 0, player pot: 10
+2023-10-08 21:18:54,282 - INFO - EnvironmentManager.py - start_new_hand - 125 - 
+2023-10-08 21:18:54,282 - INFO - EnvironmentManager.py - start_new_hand - 126 - ++++++++++++++++++ Starting new hand ++++++++++++++++++
+2023-10-08 21:18:54,283 - INFO - EnvironmentManager.py - start_new_hand - 149 - Dealer is at position 0
+2023-10-08 21:18:54,284 - INFO - CardManager.py - distribute_cards - 22 - Player 0 got ['4S', '4H'] and $500
+2023-10-08 21:18:54,284 - INFO - CardManager.py - distribute_cards - 22 - Player 1 got ['KC', '2S'] and $500
+2023-10-08 21:18:54,285 - INFO - CardManager.py - distribute_cards - 22 - Player 2 got ['8C', 'QH'] and $500
+2023-10-08 21:18:54,285 - INFO - CardManager.py - distribute_cards - 22 - Player 3 got ['3D', 'AS'] and $500
+2023-10-08 21:18:54,286 - INFO - CardManager.py - distribute_cards - 22 - Player 4 got ['7D', 'TS'] and $500
+2023-10-08 21:18:54,286 - INFO - CardManager.py - distribute_cards - 22 - Player 5 got ['JS', 'AD'] and $500
+2023-10-08 21:18:54,287 - INFO - EnvironmentManager.py - start_new_round - 32 - 
+2023-10-08 21:18:54,287 - INFO - EnvironmentManager.py - start_new_round - 33 - ===Round: Stage: PREFLOP
+2023-10-08 21:18:54,288 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 1 (equity/20/30): Action.SMALL_BLIND - Remaining stack: 499, Round pot: 1, Community pot: 0, player pot: 1
+2023-10-08 21:18:54,289 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 2 (Random): Action.BIG_BLIND - Remaining stack: 498, Round pot: 3, Community pot: 0, player pot: 2
+2023-10-08 21:18:54,484 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 3 (Random): Action.CALL - Remaining stack: 498, Round pot: 5, Community pot: 0, player pot: 2
+2023-10-08 21:18:54,684 - INFO - EnvironmentManager.py - handle_player_action - 240 - Seat 4 (Random): Action.RAISE_3BB - Remaining stack: 494, Round pot: 11, Community pot: 0, player pot: 6
+2023-10-08 21:18:54,785 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.

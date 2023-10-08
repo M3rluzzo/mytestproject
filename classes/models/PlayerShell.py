@@ -1,9 +1,10 @@
 class PlayerShell:
     """Player shell"""
-    def __init__(self, initial_stack, stack_size, name):
+
+    def __init__(self, stack_size, name):
         """Initiaization of an agent"""
-        self.initial_stack = initial_stack
         self.stack = stack_size
+        self.initial_stack = stack_size
         self.seat = None
         self.equity_alive = 0
         self.actions = []

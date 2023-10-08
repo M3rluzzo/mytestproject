@@ -34,16 +34,25 @@ class PlayerManager:
     def set_all_max_wins(self, value):
         for player in self.players:
             player.max_win = value
-            
-    def add_player(self, initial_stack, agent, current_stack = None):
+
+    def add_player(self, agent):
         """Add a player to the table. Has to happen at the very beginning"""
         self.num_of_players += 1
-        player = PlayerShell(initial_stack, current_stack, name=agent.name)
+        player = PlayerShell(stack_size=self.initial_stacks, name=agent.name)
+        player.agent_obj = agent
+        player.seat = len(self.players)  # assign next seat number to player
+        player.stack = self.initial_stacks
+        self.players.append(player)
+        self.player_status = [True] * len(self.players)
+        self.player_pots = [0] * len(self.players)
+            
+    def add_player(self, agent, stack_size):
+        """Add a player to the table. Has to happen at the very beginning"""
+        self.num_of_players += 1
+        player = PlayerShell(stack_size=stack_size, name=agent.name)
         player.agent_obj = agent
         player.seat = len(self.players)
-        if current_stack is None:
-            current_stack = initial_stack
-        player.stack = current_stack
+        
         self.players.append(player)
         
         self.set_all_pots(0)
