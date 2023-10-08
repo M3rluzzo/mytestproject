@@ -1,7 +1,7 @@
 """Tests for the gym environment"""
 import pytest
 
-from gym_env.env import HoldemTable, Action, Stage, PlayerCycle
+from gym_env.env import HoldemTable, Action, Stage, RoundManager
 
 
 def _create_env(n_players):
@@ -34,7 +34,7 @@ def test_basic_actions_with_6_player():
     assert env.players[2].stack == 98
     assert env.stage == Stage.PREFLOP
     env.step(Action.RAISE_POT)  # big blind raises
-    assert env.player_cycle.second_round
+    assert env.round_manager.second_round
     env.step(Action.FOLD)  # utg
     env.step(Action.CALL)  # 4 only remaining player calls
     assert env.stage == Stage.FLOP
@@ -131,10 +131,10 @@ def test_heads_up_after_flop():
     env.step(Action.CALL)  # seat 1 small blind = all in
     assert Action.ALL_IN in env.legal_moves  # seat 2 big blind has the option to raise
     env.step(Action.FOLD)  # seat 2 big blind folds
-    assert sum(env.player_cycle.alive) == 2
+    assert sum(env.round_manager.alive) == 2
     # two players left - heads up
     assert env.stage == Stage.PREFLOP  # start new hand
-    assert sum(env.player_cycle.alive) == 2
+    assert sum(env.round_manager.alive) == 2
     env.step(Action.CALL)  # sb calls at preflop, first mover
     assert env.stage == Stage.PREFLOP
     env.step(Action.RAISE_POT)  # bb raises pot
@@ -180,7 +180,7 @@ def test_base_actions_6_players_check_legal_moves_and_stages():
 def test_cycle_mechanism1():
     """Test cycle"""
     lst = ['dealer', 'sb', 'bb', 'utg', 'utg1', 'utg2']
-    cycle = PlayerCycle(lst)
+    cycle = RoundManager(lst)
     current = cycle.next_player()
     assert current == 'sb'
     current = cycle.next_player(step=2)
@@ -202,7 +202,7 @@ def test_cycle_mechanism1():
 def test_cycle_mechanism2():
     """Test cycle"""
     lst = ['dealer', 'sb', 'bb', 'utg']
-    cycle = PlayerCycle(lst, start_idx=2, max_steps_total=5)
+    cycle = RoundManager(lst, start_idx=2, max_steps_total=5)
     current = cycle.next_player()
     assert current == 'utg'
     cycle.next_player()

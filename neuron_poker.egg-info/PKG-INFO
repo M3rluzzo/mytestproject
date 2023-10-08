@@ -1,3 +1,14 @@
+Metadata-Version: 2.1
+Name: neuron-poker
+Version: 1.0.0
+Summary: OpenAi gym for textas holdem poker with graphical rendering and montecarlo.
+Home-page: https://github.com/dickreuter/neuron_poker
+Author: Nicolas Dickreuter
+Author-email: dickreuter@gmail.com
+License: MIT
+Platform: any
+License-File: LICENSE
+
 Neuron Poker: OpenAi gym environment for texas holdem poker
 ===========================================================
 
@@ -227,10 +238,3 @@ To contribute do the following:
 .. |image0| image:: doc/pots.png
 .. |image1| image:: doc/pytest.png
 .. |image2| image:: doc/tensorboard-example.png
-
-Note
-~~~~~~~~~~~~~~~~~~~
-
-Gym dev'essere downgradato (test effettuati: gym 0.22.0 (python 3.8) e gym 0.18.0 (python 3.7))
-pyglet dev'essere downgradato
-
