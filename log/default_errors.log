@@ -13,3 +13,37 @@ This property should not be used in TensorFlow 2.0, as updates are applied autom
 2023-10-08 21:18:54,785 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
 Instructions for updating:
 This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 23:23:46,168 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-08 23:26:16,157 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:23:02,228 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:25:33,104 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:26:22,232 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:27:44,936 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:30:12,975 - WARNING - env.py - illegal_move - 428 - 1 is an Illegal move, try again. Currently allowed: [<Action.CALL: 2>, <Action.FOLD: 0>, <Action.RAISE_3BB: 3>, <Action.RAISE_3BB: 3>, <Action.RAISE_POT: 4>, <Action.RAISE_2POT: 5>, <Action.ALL_IN: 6>]
+2023-10-10 15:30:52,552 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:31:49,456 - WARNING - env.py - illegal_move - 428 - 1 is an Illegal move, try again. Currently allowed: [<Action.CALL: 2>, <Action.FOLD: 0>, <Action.RAISE_3BB: 3>, <Action.RAISE_3BB: 3>, <Action.RAISE_POT: 4>, <Action.RAISE_2POT: 5>, <Action.ALL_IN: 6>]
+2023-10-10 15:33:52,808 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:36:50,487 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:46:23,204 - WARNING - deprecation.py - new_func - 323 - From /home/m3rluzzo/anaconda3/envs/neuron_poker/lib/python3.7/site-packages/tensorflow/python/keras/engine/training_v1.py:2070: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
+Instructions for updating:
+This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+2023-10-10 15:50:37,030 - WARNING - env.py - illegal_move - 428 - 1 is an Illegal move, try again. Currently allowed: [<Action.CALL: 2>, <Action.FOLD: 0>, <Action.RAISE_3BB: 3>, <Action.RAISE_POT: 4>, <Action.RAISE_2POT: 5>, <Action.ALL_IN: 6>]
+2023-10-10 15:51:56,572 - WARNING - env.py - illegal_move - 428 - 1 is an Illegal move, try again. Currently allowed: [<Action.CALL: 2>, <Action.FOLD: 0>, <Action.RAISE_3BB: 3>, <Action.RAISE_3BB: 3>, <Action.RAISE_POT: 4>, <Action.RAISE_2POT: 5>, <Action.ALL_IN: 6>]

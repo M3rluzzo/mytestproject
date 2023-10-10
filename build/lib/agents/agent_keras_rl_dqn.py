@@ -5,7 +5,7 @@ import time
 
 import numpy as np
 
-from gym_env.env import Action
+from gym_env._env import Action
 
 import tensorflow as tf
 import json
