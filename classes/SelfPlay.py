@@ -120,7 +120,7 @@ class SelfPlay:
 
         env.reset()
 
-        dqn = DQNPlayer()
+        dqn = DQNPlayer(load_model="dqn1", env=env)
         dqn.initiate_agent(env)
         dqn.train(env_name=model_name)
 

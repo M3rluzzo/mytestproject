@@ -1,7 +1,7 @@
 from gym.spaces import Discrete
 import numpy as np
 from logging import Logger
-from .enums import Action
+from ....classes.enums import Action
 from .EnvData import CommunityData
 
 class TableManager:

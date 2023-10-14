@@ -11,7 +11,7 @@ from rl.policy import BoltzmannQPolicy
 from rl.memory import SequentialMemory
 from rl.agents import DQNAgent
 from rl.core import Processor
-
+from classes.enums import Action
 autoplay = True
 window_length = 1
 nb_max_start_steps = 1
@@ -40,14 +40,15 @@ class Player:
         tf.compat.v1.disable_eager_execution()
         self.env = env
         nb_actions = self.env.table.action_space.n
-        self.model = Sequential()
-        self.model.add(Dense(512, activation='relu', input_shape=env.observation_space))
-        self.model.add(Dropout(0.2))
-        self.model.add(Dense(512, activation='relu'))
-        self.model.add(Dropout(0.2))
-        self.model.add(Dense(512, activation='relu'))
-        self.model.add(Dropout(0.2))
-        self.model.add(Dense(nb_actions, activation='linear'))
+        if self.model is None:
+            self.model = Sequential()
+            self.model.add(Dense(512, activation='relu', input_shape=env.observation_space))
+            self.model.add(Dropout(0.2))
+            self.model.add(Dense(512, activation='relu'))
+            self.model.add(Dropout(0.2))
+            self.model.add(Dense(512, activation='relu'))
+            self.model.add(Dropout(0.2))
+            self.model.add(Dense(nb_actions, activation='linear'))
         memory = SequentialMemory(limit=memory_limit, window_length=window_length)
         policy = TrumpPolicy()
         nb_actions = env.table.action_space.n
@@ -73,10 +74,21 @@ class Player:
         self.dqn.save_weights('dqn_{}_weights.h5'.format(env_name), overwrite=True)
         self.dqn.test(self.env, nb_episodes=5, visualize=False)
     def load(self, env_name):
-        with open('dqn_{}_json.json'.format(env_name), 'r') as architecture_json:
-            dqn_json = json.load(architecture_json)
-        self.model = model_from_json(dqn_json)
-        self.model.load_weights('dqn_{}_weights.h5'.format(env_name))
+        try:
+            with open('dqn_{}_json.json'.format(env_name), 'r') as architecture_json:
+                dqn_json = json.load(architecture_json)
+            self.model = model_from_json(dqn_json)
+            self.model.load_weights('dqn_{}_weights.h5'.format(env_name))
+            log.info(f"Model {env_name} loaded successfully.")
+            # Test del modello su alcuni dati di esempio
+            test_input = np.random.random((1, *self.env.observation_space))  # A random test input
+            try:
+                test_output = self.model.predict(test_input)
+                log.info(f"Model output on test input: {test_output}")
+            except Exception as e:
+                log.error(f"Model prediction failed: {str(e)}")
+        except Exception as e:
+            log.error(f"Error loading model {env_name}: {str(e)}")
     def play(self, nb_episodes=5, render=False):
         memory = SequentialMemory(limit=memory_limit, window_length=window_length)
         policy = TrumpPolicy()
@@ -88,7 +100,7 @@ class Player:
                 if 'stack' in processed_info:
                     processed_info = {'x': 1}
                 return processed_info
-        nb_actions = self.env.action_space.n
+        nb_actions = self.env.table.action_space.n
         self.dqn = DQNAgent(model=self.model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=nb_steps_warmup,
                             target_model_update=1e-2, policy=policy,
                             processor=CustomProcessor(),
@@ -122,7 +134,6 @@ class TrumpPolicy(BoltzmannQPolicy):
 class CustomProcessor(Processor):
     def __init__(self):
         self.legal_moves_limit = None
-
     def process_state_batch(self, batch):
         """Remove second dimension to make it possible to pass it into cnn"""
         return np.squeeze(batch, axis=1)

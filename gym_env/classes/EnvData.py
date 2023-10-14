@@ -1,4 +1,4 @@
-from .enums import Action
+from ....classes.enums import Action
 
 class CommunityData:
     """Data available to everybody"""

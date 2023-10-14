@@ -1,6 +1,6 @@
 """Random player"""
 
-from gym_env.classes.enums import Action
+from classes.enums import Action
 
 autoplay = True  # play automatically if played against keras-rl
 

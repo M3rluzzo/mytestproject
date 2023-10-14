@@ -3,12 +3,12 @@ import logging
 
 import numpy as np
 from gym import Env
-from .classes.Deck import Deck
+from ...classes.Deck import Deck
 from .classes.PlayerShell import PlayerShell
 from .classes.Dealer import Dealer
 from .classes.TableManager import TableManager
 from .classes.PlayerManager import PlayerManager
-from .classes.enums import Stage, Action
+from ...classes.enums import Stage, Action
 from .classes.EnvData import CommunityData, PlayerData
 from gym_env.rendering import PygletWindow, WHITE, RED, GREEN, BLUE
 from tools.hand_evaluator import get_winner
@@ -42,6 +42,7 @@ class TexasHoldemEnv(Env):
             get_equity = calculator.montecarlo
         else:
             from tools.montecarlo_python import get_equity
+        self.current_step = 0
         self.get_equity = get_equity
         self.use_cpp_montecarlo = use_cpp_montecarlo
         self.second_round = False
@@ -77,6 +78,7 @@ class TexasHoldemEnv(Env):
 
 #region New Hand Behaviour
     def start_new_hand(self):
+        self.current_step += 1
         """Deal new cards to players and reset table states."""
         self.player_manager.save_funds_history()
 
@@ -89,9 +91,9 @@ class TexasHoldemEnv(Env):
             self.player_manager.execute_game_over()
             return 
     
-        log.info("++++++++++++++++++")
-        log.info("Starting new hand.")
-        log.info("++++++++++++++++++")
+        log.info("++++++++++++++++++++++++++")
+        log.info(f"Starting new hand ({self.current_step})")
+        log.info("++++++++++++++++++++++++++")
         
         n_players = len(self.player_manager.players)
         self.dealer.start_new_hand(self.player_manager)
@@ -313,7 +315,7 @@ class TexasHoldemEnv(Env):
 
         log.debug(f"Community+current round pot pot: {self.table.community_pot + self.table.current_round_pot}")
 
-    def render(self, mode='human'):
+    def render(self, mode='human', current_step=-1, training_mode=True):
         """Render the current state"""
         screen_width = 600
         screen_height = 400
@@ -367,6 +369,11 @@ class TexasHoldemEnv(Env):
                              font_size=10,
                              color=WHITE)
 
+            # Check if in training mode and display the step if true
+            if training_mode and current_step is not None:
+                self.table.viewer.text(f"Step: {current_step}", screen_width - 100, 30, font_size=10, color=WHITE)
+            
+
             x_button = (-face_radius + table_radius - 20) * np.cos(radian) + screen_width / 2
             y_button = (-face_radius + table_radius - 20) * np.sin(radian) + screen_height / 2
             try:
@@ -397,6 +404,7 @@ class TexasHoldemEnv(Env):
                 log.debug("Autoplay agent. Call action method of agent.")
                 self.get_environment()
                 # call agent's action method
+                print(self.table.legal_moves)
                 action = self.dealer.current_player.agent_obj.action(self.table.legal_moves, self.observation, self.info)
                 if Action(action) not in self.table.legal_moves:
                     self.illegal_move(action)
