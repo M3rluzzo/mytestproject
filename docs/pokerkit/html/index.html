@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PokerKit &#8212; PokerKit 0.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=e259d695"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Poker Simulation" href="simulation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pokerkit">
+<h1>PokerKit<a class="headerlink" href="#pokerkit" title="Link to this heading">¶</a></h1>
+<p>PokerKit is an open-source Python library for simulating poker games and
+evaluating poker hands, developed by the University of Toronto Computer Poker
+Research Group. PokerKit supports an extensive array of poker variants and it
+provides a flexible architecture for users to define their custom games. These
+facilities are exposed via an intuitive unified high-level programmatic API. The
+library can be used in a variety of use cases, from poker AI development, tool
+creation, to online poker casino implementation. PokerKit’s reliability has been
+established through static type checking, extensive doctests, and unit tests,
+achieving 99% code coverage.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Extensive poker game logic for major and minor poker variants</p></li>
+<li><p>High-speed hand evaluations</p></li>
+<li><p>Customizable game states and parameters</p></li>
+<li><p>Robust implementation with static type checking and extensive unit tests and
+doctests</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>The PokerKit library can be installed using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pokerkit
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
+<p>Below shows the first televised million dollar pot between Tom Dwan and Phil
+Ivey.</p>
+<p>Link: <a class="reference external" href="https://youtu.be/GnxFohpljqM">https://youtu.be/GnxFohpljqM</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pokerkit</span> <span class="kn">import</span> <span class="n">Automation</span><span class="p">,</span> <span class="n">NoLimitTexasHoldem</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">NoLimitTexasHoldem</span><span class="o">.</span><span class="n">create_state</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">ANTE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BET_COLLECTION</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BLIND_OR_STRADDLE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CARD_BURNING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HOLE_CARDS_SHOWING_OR_MUCKING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HAND_KILLING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PUSHING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PULLING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="mi">500</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">),</span>
+    <span class="mi">2000</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">1125600</span><span class="p">,</span> <span class="mi">2000000</span><span class="p">,</span> <span class="mi">553500</span><span class="p">),</span>
+    <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Below shows the pre-flop dealings and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;Ac2d&#39;</span><span class="p">)</span>  <span class="c1"># Ivey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;5h7s&#39;</span><span class="p">)</span>  <span class="c1"># Antonius*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;7h6h&#39;</span><span class="p">)</span>  <span class="c1"># Dwan</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">7000</span><span class="p">)</span>  <span class="c1"># Dwan</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">23000</span><span class="p">)</span>  <span class="c1"># Ivey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Dwan</span>
+
+<span class="c1"># Below shows the flop dealing and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;Jc3d5c&#39;</span><span class="p">)</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">35000</span><span class="p">)</span>  <span class="c1"># Ivey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Dwan</span>
+
+<span class="c1"># Below shows the turn dealing and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;4h&#39;</span><span class="p">)</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">90000</span><span class="p">)</span>  <span class="c1"># Ivey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">232600</span><span class="p">)</span>  <span class="c1"># Dwan</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">1067100</span><span class="p">)</span>  <span class="c1"># Ivey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Dwan</span>
+
+<span class="c1"># Below shows the river dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;Jh&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below shows the final stacks.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>  <span class="c1"># [572100, 1997500, 1109500]</span>
+</pre></div>
+</div>
+<p>Below shows an all-in hand between Xuan and Phua.</p>
+<p>Link: <a class="reference external" href="https://youtu.be/QlgCcphLjaQ">https://youtu.be/QlgCcphLjaQ</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pokerkit</span> <span class="kn">import</span> <span class="n">Automation</span><span class="p">,</span> <span class="n">NoLimitShortDeckHoldem</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">NoLimitShortDeckHoldem</span><span class="o">.</span><span class="n">create_state</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">ANTE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BET_COLLECTION</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BLIND_OR_STRADDLE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CARD_BURNING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HOLE_CARDS_SHOWING_OR_MUCKING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HAND_KILLING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PUSHING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PULLING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="mi">3000</span><span class="p">,</span>
+    <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="mi">3000</span><span class="p">},</span>
+    <span class="mi">3000</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">495000</span><span class="p">,</span> <span class="mi">232000</span><span class="p">,</span> <span class="mi">362000</span><span class="p">,</span> <span class="mi">403000</span><span class="p">,</span> <span class="mi">301000</span><span class="p">,</span> <span class="mi">204000</span><span class="p">),</span>
+    <span class="mi">6</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Below shows the pre-flop dealings and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;Th8h&#39;</span><span class="p">)</span>  <span class="c1"># Badziakouski</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;QsJd&#39;</span><span class="p">)</span>  <span class="c1"># Zhong</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;QhQd&#39;</span><span class="p">)</span>  <span class="c1"># Xuan</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;8d7c&#39;</span><span class="p">)</span>  <span class="c1"># Jun</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;KhKs&#39;</span><span class="p">)</span>  <span class="c1"># Phua</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;8c7h&#39;</span><span class="p">)</span>  <span class="c1"># Koon</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Badziakouski</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Zhong</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">35000</span><span class="p">)</span>  <span class="c1"># Xuan</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Jun</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">298000</span><span class="p">)</span>  <span class="c1"># Phua</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Koon</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Badziakouski</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Zhong</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Xuan</span>
+
+<span class="c1"># Below shows the flop dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;9h6cKc&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below shows the turn dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;Jh&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below shows the river dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;Ts&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below show the final stacks.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>  <span class="c1"># [489000, 226000, 684000, 400000, 0, 198000]</span>
+</pre></div>
+</div>
+<p>Below shows the largest online poker pot ever played between
+Patrik Antonius and Viktor Blom.</p>
+<p>Link: <a class="reference external" href="https://youtu.be/UMBm66Id2AA">https://youtu.be/UMBm66Id2AA</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pokerkit</span> <span class="kn">import</span> <span class="n">Automation</span><span class="p">,</span> <span class="n">PotLimitOmahaHoldem</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">PotLimitOmahaHoldem</span><span class="o">.</span><span class="n">create_state</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">ANTE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BET_COLLECTION</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BLIND_OR_STRADDLE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CARD_BURNING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HOLE_CARDS_SHOWING_OR_MUCKING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HAND_KILLING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PUSHING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PULLING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
+    <span class="mi">2000</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">125945025</span><span class="p">,</span> <span class="mi">67847350</span><span class="p">),</span>
+    <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Below shows the pre-flop dealings and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;Ah3sKsKh&#39;</span><span class="p">)</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;6d9s7d8h&#39;</span><span class="p">)</span>  <span class="c1"># Blom</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">300000</span><span class="p">)</span>  <span class="c1"># Blom</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">900000</span><span class="p">)</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">2700000</span><span class="p">)</span>  <span class="c1"># Blom</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">8100000</span><span class="p">)</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Blom</span>
+
+<span class="c1"># Below shows the flop dealing and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;4s5c2h&#39;</span><span class="p">)</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">9100000</span><span class="p">)</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">43500000</span><span class="p">)</span>  <span class="c1"># Blom</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">(</span><span class="mi">77900000</span><span class="p">)</span>  <span class="c1"># Antonius</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Blom</span>
+
+<span class="c1"># Below shows the turn dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;5h&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below shows the river dealing.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_board</span><span class="p">(</span><span class="s1">&#39;9c&#39;</span><span class="p">)</span>
+
+<span class="c1"># Below show the final stacks.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>  <span class="c1"># [193792375, 0]</span>
+</pre></div>
+</div>
+<p>Below shows a bad beat between Yockey and Arieh.</p>
+<p>Link: <a class="reference external" href="https://youtu.be/pChCqb2FNxY">https://youtu.be/pChCqb2FNxY</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pokerkit</span> <span class="kn">import</span> <span class="n">Automation</span><span class="p">,</span> <span class="n">FixedLimitDeuceToSevenLowballTripleDraw</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">FixedLimitDeuceToSevenLowballTripleDraw</span><span class="o">.</span><span class="n">create_state</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">ANTE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BET_COLLECTION</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BLIND_OR_STRADDLE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CARD_BURNING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HOLE_CARDS_SHOWING_OR_MUCKING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HAND_KILLING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PUSHING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PULLING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">75000</span><span class="p">,</span> <span class="mi">150000</span><span class="p">),</span>
+    <span class="mi">150000</span><span class="p">,</span>
+    <span class="mi">300000</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">1180000</span><span class="p">,</span> <span class="mi">4340000</span><span class="p">,</span> <span class="mi">5910000</span><span class="p">,</span> <span class="mi">10765000</span><span class="p">),</span>
+    <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Below shows the pre-flop dealings and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;7h6c4c3d2c&#39;</span><span class="p">)</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;JsJcJdJhTs&#39;</span><span class="p">)</span>  <span class="c1"># Hui*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;KsKcKdKhTh&#39;</span><span class="p">)</span>  <span class="c1"># Esposito*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;AsQs6s5c3c&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Esposito</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Arieh</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Hui</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Arieh</span>
+
+<span class="c1"># Below shows the first draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;AsQs&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;2hQh&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Arieh</span>
+
+<span class="c1"># Below shows the second draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;Qh&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;4d&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Arieh</span>
+
+<span class="c1"># Below shows the third draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;6s&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;7c&#39;</span><span class="p">)</span>  <span class="c1"># Arieh</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Yockey</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Arieh</span>
+
+<span class="c1"># Below show the final stacks.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>  <span class="c1"># [0, 4190000, 5910000, 12095000]</span>
+</pre></div>
+</div>
+<p>Below shows an example badugi hand from Wikipedia.</p>
+<p>Link: <a class="reference external" href="https://en.wikipedia.org/wiki/Badugi">https://en.wikipedia.org/wiki/Badugi</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pokerkit</span> <span class="kn">import</span> <span class="n">Automation</span><span class="p">,</span> <span class="n">FixedLimitBadugi</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">FixedLimitBadugi</span><span class="o">.</span><span class="n">create_state</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">ANTE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BET_COLLECTION</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">BLIND_OR_STRADDLE_POSTING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CARD_BURNING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HOLE_CARDS_SHOWING_OR_MUCKING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">HAND_KILLING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PUSHING</span><span class="p">,</span>
+        <span class="n">Automation</span><span class="o">.</span><span class="n">CHIPS_PULLING</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="kc">None</span><span class="p">,</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">2</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">,</span>
+    <span class="mi">200</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Below shows the pre-flop dealings and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;As4hJcKh&#39;</span><span class="p">)</span>  <span class="c1"># Bob*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;3s5d7s8s&#39;</span><span class="p">)</span>  <span class="c1"># Carol*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;KsKdQsQd&#39;</span><span class="p">)</span>  <span class="c1"># Ted*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;2s4c6dKc&#39;</span><span class="p">)</span>  <span class="c1"># Alice*</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Ted</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Alice</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Bob</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Carol</span>
+
+<span class="c1"># Below shows the first draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;JcKh&#39;</span><span class="p">)</span>  <span class="c1"># Bob*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;7s8s&#39;</span><span class="p">)</span>  <span class="c1"># Carol*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;Kc&#39;</span><span class="p">)</span>  <span class="c1"># Alice*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;TcJs&#39;</span><span class="p">)</span>  <span class="c1"># Bob*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;7cTh&#39;</span><span class="p">)</span>  <span class="c1"># Carol*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;Qc&#39;</span><span class="p">)</span>  <span class="c1"># Alice*</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Bob</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Carol</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Alice</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Bob</span>
+
+<span class="c1"># Below shows the second draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;Js&#39;</span><span class="p">)</span>  <span class="c1"># Bob*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">()</span>  <span class="c1"># Carol*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;Qc&#39;</span><span class="p">)</span>  <span class="c1"># Alice*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;Ts&#39;</span><span class="p">)</span>  <span class="c1"># Bob*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;9h&#39;</span><span class="p">)</span>  <span class="c1"># Alice*</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Bob</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Carol</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Alice</span>
+<span class="n">state</span><span class="o">.</span><span class="n">fold</span><span class="p">()</span>  <span class="c1"># Bob</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Carol</span>
+
+<span class="c1"># Below shows the third draw and actions.</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">(</span><span class="s1">&#39;Th&#39;</span><span class="p">)</span>  <span class="c1"># Carol*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">stand_pat_or_discard</span><span class="p">()</span>  <span class="c1"># Alice*</span>
+<span class="n">state</span><span class="o">.</span><span class="n">deal_hole</span><span class="p">(</span><span class="s1">&#39;8h&#39;</span><span class="p">)</span>  <span class="c1"># Carol*</span>
+
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Carol</span>
+<span class="n">state</span><span class="o">.</span><span class="n">complete_bet_or_raise_to</span><span class="p">()</span>  <span class="c1"># Alice</span>
+<span class="n">state</span><span class="o">.</span><span class="n">check_or_call</span><span class="p">()</span>  <span class="c1"># Carol</span>
+
+<span class="c1"># Below show the final stacks.</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>  <span class="c1"># [196, 220, 200, 184]</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-and-validation">
+<h2>Testing and Validation<a class="headerlink" href="#testing-and-validation" title="Link to this heading">¶</a></h2>
+<p>PokerKit has extensive test coverage, passes mypy static type checking with
+strict parameter, and has been validated through extensive use in real-life
+scenarios.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<p>Contributions are welcome! Please read our Contributing Guide for more
+information.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<p>PokerKit is distributed under the MIT license.</p>
+</section>
+<section id="citing">
+<h2>Citing<a class="headerlink" href="#citing" title="Link to this heading">¶</a></h2>
+<p>If you use PokerKit in your research, please cite our library:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">kim2023pokerkit</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{PokerKit: A Comprehensive Python Library for Fine-Grained Multi-Variant Poker Game Simulations}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Juho Kim}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2023}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">eprint</span><span class="p">=</span><span class="s">{2308.07327}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">archivePrefix</span><span class="p">=</span><span class="s">{arXiv}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">primaryClass</span><span class="p">=</span><span class="s">{cs.AI}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Poker Simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#state-initialization">State Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#state-attributes">State Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#state-phases">State Phases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#state-operations">State Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation.html#interactions">Interactions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Hand Evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="evaluation.html#creating-hands">Creating Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation.html#comparing-hands">Comparing Hands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation.html#algorithm">Algorithm</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#setting-up-your-development-environment">Setting up Your Development Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#making-changes">Making Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-pull-request">Submitting a Pull Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#after-your-pull-request-is-merged">After Your Pull Request Is Merged</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-3-0-october-7-2023">Version 0.3.0 (October 7, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-2-1-september-27-2023">Version 0.2.1 (September 27, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-2-0-september-10-2023">Version 0.2.0 (September 10, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-1-1-august-29-2023">Version 0.1.1 (August 29, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-1-0-august-27-2023">Version 0.1.0 (August 27, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-2-august-17-2023">Version 0.0.2 (August 17, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-1-august-7-2023">Version 0.0.1 (August 7, 2023)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-0-0-august-2-2023">Version 0.0.0 (August 2, 2023)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-pokerkit.games">pokerkit.games module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-pokerkit.hands">pokerkit.hands module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-pokerkit.lookups">pokerkit.lookups module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-pokerkit.state">pokerkit.state module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#module-pokerkit.utilities">pokerkit.utilities module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices-and-tables">
+<h3>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">PokerKit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulation.html">Poker Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Hand Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="simulation.html" title="next chapter">Poker Simulation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, University of Toronto Computer Poker Research Group.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
