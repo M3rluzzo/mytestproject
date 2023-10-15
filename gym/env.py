@@ -1,6 +1,6 @@
 import gym
 from gym import spaces
-from pokerkit import NoLimitTexasHoldem
+from pokerkit import Card, Deck, Hand, Table, Player, NoLimitTexasHoldem
 
 class PokerEnv(gym.Env):
     def __init__(self):
@@ -9,7 +9,6 @@ class PokerEnv(gym.Env):
         self.game = NoLimitTexasHoldem(player_count=6)
         self.state = self.game.create_state()
         
-        # Definire lo spazio delle azioni e delle osservazioni
         self.action_space = spaces.Discrete(4)  # 0: fold, 1: check, 2: call, 3: raise
         self.observation_space = spaces.Box(low=0, high=1, shape=(...,), dtype=float)
         
@@ -18,7 +17,7 @@ class PokerEnv(gym.Env):
         return self._get_observation()
         
     def step(self, action):
-        # Implementare la logica per eseguire un'azione e ottenere il nuovo stato
+        # Implementazione completa della logica del gioco
         # ...
         
         done = False  # Implementare la logica per determinare se il gioco è finito
@@ -33,3 +32,13 @@ class PokerEnv(gym.Env):
     def render(self, mode='human'):
         # Implementare la logica per la visualizzazione del gioco
         pass
+
+# Creazione di un'istanza dell'ambiente
+env = PokerEnv()
+
+# Loop di gioco
+done = False
+obs = env.reset()
+while not done:
+    action = env.action_space.sample()  # Sostituire con la logica dell'agente
+    obs, reward, done, info = env.step(action)
