@@ -1,4 +1,5 @@
 import logging
+import time
 import numpy as np
 import tensorflow as tf
 import json
@@ -38,7 +39,7 @@ class Player:
     def initiate_agent(self, env):
         tf.compat.v1.disable_eager_execution()
         self.env = env
-        nb_actions = self.env.action_space.n
+        nb_actions = self.env.table.action_space.n
         self.model = Sequential()
         self.model.add(Dense(512, activation='relu', input_shape=env.observation_space))
         self.model.add(Dropout(0.2))
@@ -49,7 +50,7 @@ class Player:
         self.model.add(Dense(nb_actions, activation='linear'))
         memory = SequentialMemory(limit=memory_limit, window_length=window_length)
         policy = TrumpPolicy()
-        nb_actions = env.action_space.n
+        nb_actions = env.table.action_space.n
         self.dqn = DQNAgent(model=self.model, nb_actions=nb_actions, memory=memory, nb_steps_warmup=nb_steps_warmup,
                             target_model_update=1e-2, policy=policy,
                             processor=CustomProcessor(),

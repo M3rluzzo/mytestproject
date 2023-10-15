@@ -1,5 +1,5 @@
 import logging
-from .models.PlayerShell import PlayerShell
+from gym_env.classes.PlayerShell import PlayerShell
 import numpy as np
 import pandas as pd
 import gym
@@ -24,11 +24,10 @@ class SelfPlay:
         from agents.agent_random import Player as RandomPlayer
         env_name = 'neuron_poker-v0'
         num_of_plrs = 2
-        self.env = gym.make(env_name, initial_stack=self.stack)
+        self.env = gym.make(env_name, initial_stacks=self.stack, render=self.render)
         for _ in range(num_of_plrs):
             player = RandomPlayer()
-            print(self.env.player_manager)
-            self.env.player_manager.add_player(self.stack, player)
+            self.env.add_player(player)
 
         self.env.reset()
 
@@ -40,7 +39,7 @@ class SelfPlay:
         self.env = gym.make(env_name, initial_stacks=self.stack, render=self.render)
         for _ in range(num_of_plrs):
             player = KeyPressAgent()
-            self.env.player_manager.add_player(player)
+            self.env.add_player(player)
 
         self.env.reset()
 
@@ -85,7 +84,7 @@ class SelfPlay:
 
             for _ in range(self.num_episodes):
                 self.env.reset()
-                self.winner_in_episodes.append(self.env.winner_ix)
+                self.winner_in_episodes.append(self.env.player_manager.winner_ix)
 
             league_table = pd.Series(self.winner_in_episodes).value_counts()
             best_player = int(league_table.index[0])

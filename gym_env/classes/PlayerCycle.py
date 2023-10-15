@@ -1,11 +1,13 @@
 import numpy as np
-import logging
-log = logging.getLogger(__name__)
-class RoundManager:
+from logging import Logger
+
+class PlayerCycle:
     """Handle the circularity of the Table."""
-    def __init__(self, lst, start_idx=0, dealer_idx=0, max_steps_total=None,
+
+    def __init__(self, log, lst, start_idx=0, dealer_idx=0, max_steps_total=None,
                  last_raiser_step=None, max_steps_after_raiser=None, max_steps_after_big_blind=None):
         """Cycle over a list"""
+        self.log: Logger = log
         self.lst = lst
         self.start_idx = start_idx
         self.size = len(lst)
@@ -16,6 +18,7 @@ class RoundManager:
         self.last_raiser = None
         self.step_counter = 0
         self.steps_for_blind_betting = 2
+        self.second_round = False
         self.idx = 0
         self.dealer_idx = dealer_idx
         self.can_still_make_moves_in_this_hand = []  # if the player can still play in this round
@@ -44,7 +47,7 @@ class RoundManager:
     def next_player(self, step=1):
         """Switch to the next player in the round."""
         if sum(np.array(self.can_still_make_moves_in_this_hand) + np.array(self.out_of_cash_but_contributed)) < 2:
-            log.debug("Only one player remaining")
+            self.log.debug("Only one player remaining")
             return False  # only one player remains
 
         self.idx += step
@@ -53,21 +56,21 @@ class RoundManager:
         if self.step_counter > len(self.lst):
             self.second_round = True
         if self.max_steps_total and (self.step_counter >= self.max_steps_total):
-            log.debug("Max steps total has been reached")
+            self.log.debug("Max steps total has been reached")
             return False
 
         if self.last_raiser:
             raiser_reference = self.last_raiser
             if self.max_steps_after_raiser and (self.step_counter > self.max_steps_after_raiser + raiser_reference):
-                log.debug("max steps after raiser has been reached")
+                self.log.debug("max steps after raiser has been reached")
                 return False
         elif self.max_steps_after_raiser and \
                 (self.step_counter > self.max_steps_after_big_blind + self.steps_for_blind_betting):
-            log.debug("max steps after raiser has been reached")
+            self.log.debug("max steps after raiser has been reached")
             return False
 
         if self.checkers == sum(self.alive):
-            log.debug("All players checked")
+            self.log.debug("All players checked")
             return False
 
         while True:
@@ -78,7 +81,7 @@ class RoundManager:
             self.step_counter += 1
             self.idx %= len(self.lst)
             if self.max_steps_total and self.step_counter >= self.max_steps_total:
-                log.debug("Max steps total has been reached after jumping some folders")
+                self.log.debug("Max steps total has been reached after jumping some folders")
                 return False
 
         self.update_alive()

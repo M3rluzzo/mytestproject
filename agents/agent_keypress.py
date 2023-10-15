@@ -1,6 +1,6 @@
 """manual keypress agent"""
 
-from gym_env.env import Action
+from gym_env._env import Action
 
 
 class Player:

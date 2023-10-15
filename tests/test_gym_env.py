@@ -1,12 +1,12 @@
 """Tests for the gym environment"""
 import pytest
 
-from gym_env.env import HoldemTable, Action, Stage, RoundManager
+from gym_env.env import TexasHoldemEnv, Action, Stage, RoundManager
 
 
 def _create_env(n_players):
     """Create an environment"""
-    env = HoldemTable()
+    env = TexasHoldemEnv()
     for _ in range(n_players):
         player = PlayerForTest()
         env.add_player(player)

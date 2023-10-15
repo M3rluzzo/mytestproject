@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Dense, Dropout
 from rl.memory import SequentialMemory
 
 from agents.agent_keras_rl_dqn import TrumpPolicy, memory_limit, window_length
-from gym_env import env
+from gym_env import _env
 
 
 class Player:
@@ -24,7 +24,7 @@ class Player:
         """initiate a deep Q agent"""
 
         self.model = Sequential()
-        self.model.add(Dense(512, activation='relu', input_shape=env.observation_space))  # pylint: disable=no-member
+        self.model.add(Dense(512, activation='relu', input_shape=_env.observation_space))  # pylint: disable=no-member
         self.model.add(Dropout(0.2))
         self.model.add(Dense(512, activation='relu'))
         self.model.add(Dropout(0.2))
