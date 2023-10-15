@@ -1,0 +1,3 @@
+[submodule "pokerkit"]
+	path = pokerkit
+	url = https://github.com/uoftcprg/pokerkit.git
