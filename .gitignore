@@ -40,3 +40,4 @@ build
 .pydocstyle
 .travis.yml
 /dist
+*.rst
