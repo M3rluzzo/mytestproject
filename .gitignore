@@ -36,3 +36,7 @@ neuron_poker.egg-info
 log/
 *__pycache__*
 build
+.pylintrc
+.pydocstyle
+.travis.yml
+/dist
