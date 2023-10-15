@@ -1,0 +1,206 @@
+--- main.py ---
+import random
+from env import PokerEnv
+def main():
+   env = PokerEnv()
+   done = False
+   while not done:
+      obs = env.reset()
+      while True:
+         action = random.randint(0,4) 
+         obs, reward, done, info = env.step(action)
+         if done:
+            break
+   print("Game over")
+if __name__ == '__main__':
+   main()
+--- env.py ---
+import logging
+from pokerkit import State, NoLimitTexasHoldem, Automation
+from enum import Enum
+from .classes.player import PlayerManager
+# Impostiamo il logging per tenere traccia dell'esecuzione
+logging.basicConfig(level=logging.DEBUG)
+class Action(Enum):
+    """Allowed actions"""
+    FOLD = 0
+    CHECK = 1
+    CALL = 2
+    RAISE_3BB = 3
+    RAISE_HALF_POT = 3
+    RAISE_POT = 4
+    RAISE_2POT = 5
+    ALL_IN = 6
+    SMALL_BLIND = 7
+    BIG_BLIND = 8,
+    RAISE = 9
+class Stage(Enum):
+    """Allowed actions"""
+    PREFLOP = 0
+    FLOP = 1
+    TURN = 2
+    RIVER = 3
+    END_HIDDEN = 4
+    SHOWDOWN = 5
+class PokerEnv:
+    def __init__(self, num_players, starting_stack, small_blind, big_blind, ante, players, cash_game=True):
+        # self.action_space = spaces.Discrete(5)
+        # self.observation_space = spaces.Box(...)
+        self.num_players = num_players
+        self.cash_game = cash_game
+        self.starting_stack = starting_stack
+        self.small_blind = small_blind
+        self.big_blind = big_blind
+        self.ante = ante
+        self.starting_stacks = starting_stacks if starting_stacks is not None else self._get_starting_stacks()
+        self.state:State = None
+        self.player_manager: PlayerManager = PlayerManager(players)
+        self._init_new_game_state()
+    def deal_cards(self, hole_cards):
+        for hole in hole_cards:
+            self.state.deal_hole(hole)
+    def deal_board(self, board_cards):
+        self.state.deal_board(board_cards)
+    def take_action(self, action, value = None):
+        if action == Action.RAISE:
+            self.state.complete_bet_or_raise_to(value)
+        elif action in [Action.CALL, Action.CHECK]:
+            self.state.check_or_call()
+        elif action is Action.FOLD:
+            self.state.fold()
+    def _init_new_game_state(self):
+        logging.debug("Init new game state")
+        self.state = NoLimitTexasHoldem.create_state(
+            automations=self._get_automations(),
+            ante_trimming_status=True, # False for big blind ante, True otherwise
+            antes=self.ante,
+            min_bet=self.big_blind,
+            blinds_or_straddles=(self.small_blind, self.big_blind),
+            player_count=self.num_players,
+            starting_stacks=self.starting_stacks
+        )
+    def _get_automations(self):
+        return (Automation.ANTE_POSTING, Automation.BET_COLLECTION,
+            Automation.BLIND_OR_STRADDLE_POSTING, Automation.CARD_BURNING,
+            Automation.HOLE_CARDS_SHOWING_OR_MUCKING,
+            Automation.HAND_KILLING, Automation.CHIPS_PUSHING,
+            Automation.CHIPS_PULLING)
+    def _get_starting_stacks(self):
+        return tuple([self.starting_stack] * self.num_players)
+    def reset(self):
+        logging.debug("Resetting the game state")
+        self._init_new_game_state()
+        return self._get_observation()
+    def step(self, action: Action, value = None):
+        logging.debug(f"Applying action: {action}")
+        if action == Action.RAISE:
+            self.state.complete_bet_or_raise_to(value)
+        elif action in [Action.CALL, Action.CHECK]:
+            self.state.check_or_call()
+        elif action is Action.FOLD:
+            self.state.fold()
+        reward = self._get_reward()
+        # observation = self._get_observation()
+        observation = None
+        logging.debug(f"Observation: {observation}")
+        logging.debug(f"Reward: {reward}")
+        return observation, reward, {}
+    def _get_observation(self):
+        position = self.state.actor_index
+        # print(position)
+        cards = self.state.hole_cards[position]
+        amount_to_call = self.state.checking_or_calling_amount
+        return [position, cards, amount_to_call]
+    def _get_reward(self):
+        print(self.state.actor_index)
+        return self.state.stacks[self.state.actor_index]
+--- test.py ---
+import unittest
+from env import PokerEnv, Action, Stage
+class TestPokerEnv(unittest.TestCase):
+    def test_game(self):
+        # Creiamo l'ambiente
+        env = PokerEnv(num_players=3, starting_stack=1000000, small_blind=1000, big_blind=2000, ante=500, starting_stacks=(1125600, 2000000, 553500))
+        # Distribuiamo le carte
+        env.deal_cards(["Ac2d", "5h7s", "7h6h"])
+        # Azioni pre-flop
+        env.step(Action.RAISE, 7000)
+        env.step(Action.RAISE, 23000) 
+        env.step(Action.FOLD)
+        env.step(Action.CALL)
+        # Distribuiamo il flop
+        env.deal_board("Jc3d5c")
+        # Azioni flop
+        env.step(Action.RAISE, 35000)
+        env.step(Action.CALL)  
+        # Distribuiamo il turn
+        env.deal_board("4h")
+        # Azioni turn
+        env.step(Action.RAISE, 90000)
+        env.step(Action.RAISE, 232600)
+        env.step(Action.RAISE, 1067100)
+        env.step(Action.CALL)
+        # Distribuiamo il river  
+        env.deal_board("Jh")
+        # Controlliamo le chip finali
+        stacks = env.state.stacks
+        self.assertEqual(stacks, [572100, 1997500, 1109500])
+if __name__ == '__main__':
+    unittest.main()--- __init__.py ---
+from gym.envs.registration import register
+register(
+    id='TexasHoldem-v0',
+    entry_point='gym_env.env:TexasHoldemEnv',
+)
+--- stage.py ---
+from enum import Enum
+class Stage(Enum):
+    """Allowed actions"""
+    PREFLOP = 0
+    FLOP = 1
+    TURN = 2
+    RIVER = 3
+    END_HIDDEN = 4
+    SHOWDOWN = 5--- action.py ---
+class Action(Enum):
+    """Allowed actions"""
+    FOLD = 0
+    CHECK = 1
+    CALL = 2
+    RAISE_3BB = 3
+    RAISE_HALF_POT = 3
+    RAISE_POT = 4
+    RAISE_2POT = 5
+    ALL_IN = 6
+    SMALL_BLIND = 7
+    BIG_BLIND = 8--- player.py ---
+class Player:
+   def __init__(self, starting_stack):
+      self.hand = None
+      self.starting_stack = starting_stack
+      self.current_stack = starting_stack
+   def reset(self):
+      self.hand = None
+      self.current_stack = self.starting_stack
+class PlayerManager:
+   def __init__(self, players):
+      self.players = players
+      self.current_player = None
+   def add_player(self, player:Player):
+      self.players.append(player)
+   def reset(self):
+      for p in self.players:
+         p.reset()--- poker_game.py ---
+# poker_env/poker_game.py
+from player import Player
+from action import Action
+NUM_PLAYERS = 6
+class PokerGame:
+   def __init__(self):
+      self.players = [Player() for _ in range(NUM_PLAYERS)]
+   def deal_hole_cards(self, cards):
+      # deal cards logic
+   def take_action(self, player, action):  
+      # action handling logic
+   def check_winners(self):
+      # winner determination
