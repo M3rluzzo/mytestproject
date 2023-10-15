@@ -1,2 +1,0 @@
-2023-10-08 11:18:16,830 - DEBUG - EnvironmentData.py - set_legal_moves - 103 - Community+current round pot pot: 1862
-2023-10-08 11:18:16,849 - DEBUG - EnvironmentManager.py - calculate_reward - 303 - Keras-rl agent has reward -1000
