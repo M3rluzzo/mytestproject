@@ -27,5 +27,12 @@ Graph/
 /EquityCalculatorMontecarlo.pdb
 /EquityCalculatorMontecarlo.pyd
 /python37.dll
+.conda
+.vscode
+tools/montecarlo_cython.egg-info
+tools/montecarlo_cpp
+tools
+neuron_poker.egg-info
 log/
 *__pycache__*
+build
