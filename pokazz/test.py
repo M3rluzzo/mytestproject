@@ -1,10 +1,11 @@
 import unittest
 from env import PokerEnv, Action, Stage
-    
+from classes.player import Player
 class TestPokerEnv(unittest.TestCase):
     def test_game(self):
         # Creiamo l'ambiente
-        env = PokerEnv(num_players=3, starting_stack=1000000, small_blind=1000, big_blind=2000, ante=500, starting_stacks=(1125600, 2000000, 553500))
+        players = [Player("Ivey", 1125600), Player("Antonius", 2000000), Player("Dwan", 553500)]
+        env = PokerEnv(players, starting_stack=1000000, small_blind=1000, big_blind=2000, ante=500)
 
         # Distribuiamo le carte
         env.deal_cards(["Ac2d", "5h7s", "7h6h"])

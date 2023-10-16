@@ -18,7 +18,7 @@ if __name__ == '__main__':
 import logging
 from pokerkit import State, NoLimitTexasHoldem, Automation
 from enum import Enum
-from .classes.player import PlayerManager
+from classes.player import PlayerManager
 # Impostiamo il logging per tenere traccia dell'esecuzione
 logging.basicConfig(level=logging.DEBUG)
 class Action(Enum):
@@ -43,16 +43,12 @@ class Stage(Enum):
     END_HIDDEN = 4
     SHOWDOWN = 5
 class PokerEnv:
-    def __init__(self, num_players, starting_stack, small_blind, big_blind, ante, players, cash_game=True):
-        # self.action_space = spaces.Discrete(5)
-        # self.observation_space = spaces.Box(...)
-        self.num_players = num_players
+    def __init__(self, players, starting_stack, small_blind, big_blind, ante, cash_game=True):
         self.cash_game = cash_game
         self.starting_stack = starting_stack
         self.small_blind = small_blind
         self.big_blind = big_blind
         self.ante = ante
-        self.starting_stacks = starting_stacks if starting_stacks is not None else self._get_starting_stacks()
         self.state:State = None
         self.player_manager: PlayerManager = PlayerManager(players)
         self._init_new_game_state()
@@ -70,14 +66,15 @@ class PokerEnv:
             self.state.fold()
     def _init_new_game_state(self):
         logging.debug("Init new game state")
+        print(self.player_manager.starting_stacks)
         self.state = NoLimitTexasHoldem.create_state(
             automations=self._get_automations(),
             ante_trimming_status=True, # False for big blind ante, True otherwise
             antes=self.ante,
             min_bet=self.big_blind,
             blinds_or_straddles=(self.small_blind, self.big_blind),
-            player_count=self.num_players,
-            starting_stacks=self.starting_stacks
+            player_count=len(self.player_manager.players),
+            starting_stacks=self.player_manager.starting_stacks
         )
     def _get_automations(self):
         return (Automation.ANTE_POSTING, Automation.BET_COLLECTION,
@@ -85,8 +82,6 @@ class PokerEnv:
             Automation.HOLE_CARDS_SHOWING_OR_MUCKING,
             Automation.HAND_KILLING, Automation.CHIPS_PUSHING,
             Automation.CHIPS_PULLING)
-    def _get_starting_stacks(self):
-        return tuple([self.starting_stack] * self.num_players)
     def reset(self):
         logging.debug("Resetting the game state")
         self._init_new_game_state()
@@ -117,10 +112,12 @@ class PokerEnv:
 --- test.py ---
 import unittest
 from env import PokerEnv, Action, Stage
+from classes.player import Player
 class TestPokerEnv(unittest.TestCase):
     def test_game(self):
         # Creiamo l'ambiente
-        env = PokerEnv(num_players=3, starting_stack=1000000, small_blind=1000, big_blind=2000, ante=500, starting_stacks=(1125600, 2000000, 553500))
+        players = [Player("Ivey", 1125600), Player("Antonius", 2000000), Player("Dwan", 553500)]
+        env = PokerEnv(players, starting_stack=1000000, small_blind=1000, big_blind=2000, ante=500)
         # Distribuiamo le carte
         env.deal_cards(["Ac2d", "5h7s", "7h6h"])
         # Azioni pre-flop
@@ -175,8 +172,9 @@ class Action(Enum):
     SMALL_BLIND = 7
     BIG_BLIND = 8--- player.py ---
 class Player:
-   def __init__(self, starting_stack):
+   def __init__(self, name, starting_stack):
       self.hand = None
+      self.name = name
       self.starting_stack = starting_stack
       self.current_stack = starting_stack
    def reset(self):
@@ -186,6 +184,9 @@ class PlayerManager:
    def __init__(self, players):
       self.players = players
       self.current_player = None
+   @property
+   def starting_stacks(self):
+      return tuple([player.starting_stack for player in self.players])
    def add_player(self, player:Player):
       self.players.append(player)
    def reset(self):
@@ -195,9 +196,9 @@ class PlayerManager:
 from player import Player
 from action import Action
 NUM_PLAYERS = 6
-class PokerGame:
+class GameManager:
    def __init__(self):
-      self.players = [Player() for _ in range(NUM_PLAYERS)]
+      self.
    def deal_hole_cards(self, cards):
       # deal cards logic
    def take_action(self, player, action):  

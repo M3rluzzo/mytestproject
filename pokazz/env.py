@@ -1,7 +1,7 @@
 import logging
 from pokerkit import State, NoLimitTexasHoldem, Automation
 from enum import Enum
-from .classes.player import PlayerManager
+from classes.player import PlayerManager
 
 # Impostiamo il logging per tenere traccia dell'esecuzione
 logging.basicConfig(level=logging.DEBUG)
@@ -20,29 +20,21 @@ class Action(Enum):
     SMALL_BLIND = 7
     BIG_BLIND = 8,
     RAISE = 9
-
-
 class Stage(Enum):
     """Allowed actions"""
-
     PREFLOP = 0
     FLOP = 1
     TURN = 2
     RIVER = 3
     END_HIDDEN = 4
     SHOWDOWN = 5
-
 class PokerEnv:
-    def __init__(self, num_players, starting_stack, small_blind, big_blind, ante, players, cash_game=True):
-        # self.action_space = spaces.Discrete(5)
-        # self.observation_space = spaces.Box(...)
-        self.num_players = num_players
+    def __init__(self, players, starting_stack, small_blind, big_blind, ante, cash_game=True):
         self.cash_game = cash_game
         self.starting_stack = starting_stack
         self.small_blind = small_blind
         self.big_blind = big_blind
         self.ante = ante
-        self.starting_stacks = starting_stacks if starting_stacks is not None else self._get_starting_stacks()
         self.state:State = None
         self.player_manager: PlayerManager = PlayerManager(players)
         self._init_new_game_state()
@@ -65,14 +57,15 @@ class PokerEnv:
     
     def _init_new_game_state(self):
         logging.debug("Init new game state")
+        print(self.player_manager.starting_stacks)
         self.state = NoLimitTexasHoldem.create_state(
             automations=self._get_automations(),
             ante_trimming_status=True, # False for big blind ante, True otherwise
             antes=self.ante,
             min_bet=self.big_blind,
             blinds_or_straddles=(self.small_blind, self.big_blind),
-            player_count=self.num_players,
-            starting_stacks=self.starting_stacks
+            player_count=len(self.player_manager.players),
+            starting_stacks=self.player_manager.starting_stacks
         )
 
     def _get_automations(self):
@@ -96,7 +89,6 @@ class PokerEnv:
             self.state.check_or_call()
         elif action is Action.FOLD:
             self.state.fold()
-
         reward = self._get_reward()
         # observation = self._get_observation()
         observation = None
