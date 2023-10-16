@@ -1,5 +1,5 @@
 # poker_env/poker_game.py
-from player import Player
+from env.classes.player_manager import Player
 from action import Action
 
 NUM_PLAYERS = 6

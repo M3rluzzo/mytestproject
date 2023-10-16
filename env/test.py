@@ -1,6 +1,6 @@
 import unittest
-from env import PokerEnv, Action, Stage
-from classes.player import Player
+from env.poker_env import PokerEnv, Action, Stage
+from env.classes.player_manager import Player
 class TestPokerEnv(unittest.TestCase):
     def test_game(self):
         # Creiamo l'ambiente

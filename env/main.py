@@ -1,5 +1,5 @@
 import random
-from env import PokerEnv
+from env.poker_env import PokerEnv
 
 def main():
    env = PokerEnv()

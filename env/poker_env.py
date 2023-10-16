@@ -1,7 +1,7 @@
 import logging
 from pokerkit import State, NoLimitTexasHoldem, Automation
 from enum import Enum
-from classes.player import PlayerManager
+from env.classes.player_manager import PlayerManager
 
 # Impostiamo il logging per tenere traccia dell'esecuzione
 logging.basicConfig(level=logging.DEBUG)
@@ -92,7 +92,6 @@ class PokerEnv:
         reward = self._get_reward()
         # observation = self._get_observation()
         observation = None
-
         logging.debug(f"Observation: {observation}")
         logging.debug(f"Reward: {reward}")
 
