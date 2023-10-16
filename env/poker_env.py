@@ -1,7 +1,7 @@
 import logging
 from pokerkit import State, NoLimitTexasHoldem, Automation
 from enum import Enum
-from env.classes.player_manager import PlayerManager
+from ..classes.player_manager import PlayerManager
 
 # Impostiamo il logging per tenere traccia dell'esecuzione
 logging.basicConfig(level=logging.DEBUG)
