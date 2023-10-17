@@ -35,16 +35,11 @@ class SpinNGoManager:
     def player_stacks(self):
         return tuple(x.starting_stack for x in self.players)
     
-    def __init__(self, big_blind, small_blind, antes):
+    def __init__(self, big_blind, small_blind, antes, players):
         self.state = None
         self.blinds = (small_blind, big_blind)
         self.antes = antes
-        self.players = [Player("Badziakouski", 495000),
-                        Player("Zhong", 232000),
-                        Player("Xuan", 362000),
-                        Player("Jun", 403000),
-                        Player("Phua", 301000),
-                        Player("Koon", 204000)]
+        self.players = players
         self.reset_game()
 
     def reset_game(self):
@@ -88,25 +83,120 @@ class SpinNGoManager:
 
     def run_game(self):
         # Distribuisci le hole cards a tutti i giocatori (attualmente sono hardcodate, poi saranno random)
-        test_cards = ['Th8h', 'QsJd', 'QhQd', '8d7c', 'KhKs', '8c7h']
+        test_cards = ['Ac2d', '5h7s', '7h6h']
         for hole_cards in test_cards:
             self.state.deal_hole(hole_cards)
         
-        self.state.check_or_call()  # Badziakouski
-        self.state.check_or_call()  # Zhong
-        self.state.complete_bet_or_raise_to(35000)  # Xuan
-        self.state.fold()  # Jun
-        self.state.complete_bet_or_raise_to(298000)  # Phua
-        self.state.fold()  # Koon
-        self.state.fold()  # Badziakouski
-        self.state.fold()  # Zhong
-        self.state.check_or_call()  # Xuan
+        self.state.complete_bet_or_raise_to(7000)  # Dwan
+        self.state.complete_bet_or_raise_to(23000)  # Ivey
+        self.state.fold()  # Antonius
+        self.state.check_or_call()  # Dwan
+        # Flop dealing
+        self.state.deal_board('Jc3d5c')
+
+        self.state.complete_bet_or_raise_to(35000)  # Ivey
+        self.state.check_or_call()  # Dwan
+        # Turn dealing
+        self.state.deal_board('4h')
         
-        self.state.deal_board('9h6cKc')
+        self.state.complete_bet_or_raise_to(90000)  # Ivey
+        self.state.complete_bet_or_raise_to(232600)  # Dwan
+        self.state.complete_bet_or_raise_to(1067100)  # Ivey
+        self.state.check_or_call()  # Dwan
+        # River dealing
         self.state.deal_board('Jh')
-        self.state.deal_board('Ts')
 
 
 if __name__ == "__main__":
-    manager = SpinNGoManager(3000, 1500, 3000)
+    """Create a no-limit Texas hold'em game.
+
+        Below shows the first televised million dollar pot between
+        Tom Dwan and Phil Ivey.
+
+        Link: https://youtu.be/GnxFohpljqM
+
+        >>> state = NoLimitTexasHoldem.create_state(
+        ...     (
+        ...         Automation.ANTE_POSTING,
+        ...         Automation.BET_COLLECTION,
+        ...         Automation.BLIND_OR_STRADDLE_POSTING,
+        ...         Automation.CARD_BURNING,
+        ...         Automation.HOLE_CARDS_SHOWING_OR_MUCKING,
+        ...         Automation.HAND_KILLING,
+        ...         Automation.CHIPS_PUSHING,
+        ...         Automation.CHIPS_PULLING,
+        ...     ),
+        ...     True,
+        ...     500,
+        ...     (1000, 2000),
+        ...     2000,
+        ...     (1125600, 2000000, 553500),
+        ...     3,
+        ... )
+
+        Below shows the pre-flop dealings and actions.
+
+        >>> state.deal_hole('Ac2d')  # Ivey
+        HoleDealing(player_index=0, cards=(Ac, 2d), statuses=(False, False))
+        >>> state.deal_hole('5h7s')  # Antonius*
+        HoleDealing(player_index=1, cards=(5h, 7s), statuses=(False, False))
+        >>> state.deal_hole('7h6h')  # Dwan
+        HoleDealing(player_index=2, cards=(7h, 6h), statuses=(False, False))
+
+        >>> state.complete_bet_or_raise_to(7000)  # Dwan
+        CompletionBettingOrRaisingTo(player_index=2, amount=7000)
+        >>> state.complete_bet_or_raise_to(23000)  # Ivey
+        CompletionBettingOrRaisingTo(player_index=0, amount=23000)
+        >>> state.fold()  # Antonius
+        Folding(player_index=1)
+        >>> state.check_or_call()  # Dwan
+        CheckingOrCalling(player_index=2, amount=16000)
+
+        Below shows the flop dealing and actions.
+
+        >>> state.deal_board('Jc3d5c')
+        BoardDealing(cards=(Jc, 3d, 5c))
+
+        >>> state.complete_bet_or_raise_to(35000)  # Ivey
+        CompletionBettingOrRaisingTo(player_index=0, amount=35000)
+        >>> state.check_or_call()  # Dwan
+        CheckingOrCalling(player_index=2, amount=35000)
+
+        Below shows the turn dealing and actions.
+
+        >>> state.deal_board('4h')
+        BoardDealing(cards=(4h,))
+
+        >>> state.complete_bet_or_raise_to(90000)  # Ivey
+        CompletionBettingOrRaisingTo(player_index=0, amount=90000)
+        >>> state.complete_bet_or_raise_to(232600)  # Dwan
+        CompletionBettingOrRaisingTo(player_index=2, amount=232600)
+        >>> state.complete_bet_or_raise_to(1067100)  # Ivey
+        CompletionBettingOrRaisingTo(player_index=0, amount=1067100)
+        >>> state.check_or_call()  # Dwan
+        CheckingOrCalling(player_index=2, amount=262400)
+
+        Below shows the river dealing.
+
+        >>> state.deal_board('Jh')
+        BoardDealing(cards=(Jh,))
+
+        Below show the final stacks.
+
+        >>> state.stacks
+        [572100, 1997500, 1109500]
+
+        :param antes: The antes.
+        :param blinds_or_straddles: The blinds or straddles.
+        :param min_bet: The min bet.
+        :param starting_stacks: The starting stacks.
+        :param player_count: The number of players.
+        :return: The created state.
+        """    
+    manager = SpinNGoManager(2000, 1000, 500, [
+                                                Player("Dwan", 1125600),
+                                                Player("Ivey", 2000000),
+                                                Player("Antonius", 553500)
+                                                ]
+                             )
     manager.run_game()
