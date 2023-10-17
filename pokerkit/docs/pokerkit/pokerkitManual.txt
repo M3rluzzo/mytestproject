@@ -1,0 +1,555 @@
+PokerKit: A Comprehensive Python Library for Fine-Grained Multi-Variant Poker Game Simulations
+Juho Kim
+Faculty of Applied Science and Engineering University of Toronto, Toronto, Ontario, Canada juho.kim@mail.utoronto.ca
+
+
+
+
+  Abstract�PokerKit is an open-source Python library designed to overcome the restrictions of existing poker game simulation and hand evaluation tools, which typically support only a handful of poker variants and lack flexibility in game state control. In contrast, PokerKit significantly expands this scope by supporting an extensive array of poker variants and it provides a flexible architecture for users to define their custom games. This paper details the design and implementation of PokerKit, including its intuitive programmatic API, multi-variant game support, and a unified hand evaluation suite across different hand types. The flexibility of PokerKit allows for applications in diverse areas, such as poker AI development, tool creation, and online poker casino implementation. PokerKit�s reliability has been established through static type checking, extensive doctests, and unit tests, achieving 99% code coverage. The introduction of PokerKit represents a significant contribution to the field of computer poker, fostering future research and advanced AI development for a wide variety of poker games. The source code is available athttps://github.com/uoftcprg/pokerkit
+  Index Terms�Board games, Card games, Games of chance, Game design, Multi-agent systems, Poker, Rule based systems, Scripting, Strategy games
+
+I. INTRODUCTION
+OKER, a game that intertwines strategy  and  chance,  has emerged as an exciting and challenging domain
+for artificial intelligence (AI) research, primarily due to its inherent nature of imperfect information. Pioneering AI agents such as Deepstack and Pluribus have leveraged poker, more specifically Texas hold �em, as a benchmark for evaluating  their algorithms [1], [2]. Nonetheless, poker is not a monolithic game but a collection of numerous variants, each introducing its unique set of complexities. This vast diversity underscores the inherent challenge of developing a comprehensive poker game logic system. This is particularly true in the open-source space, where solutions are often confined to supporting a limited set of poker variants [3], [4].
+  In the open-source space, there exist numerous poker li- braries. Some specialize in providing a simulated poker en- vironment, but their focus tends to be on heads-up (2-player) no-limit Texas Hold�em [3], [4]. However, the vast majority of these libraries concentrate purely on hand evaluation and lack the extensive game logic needed for poker game simulations [5], [6].
+  To address this gap in the open-source space of computer poker, we developed PokerKit, a comprehensive Python li- brary. It accommodates a multitude of poker variants, includ- ing but not limited to Texas hold �em, Omaha hold �em, seven
+
+card stud, razz, and deuce-to-seven triple draw. Moreover, PokerKit provides a programmatic interface that allows users to define their own variants and customize game parameters such as betting structures, high/low-split options, antes, blinds, and straddles.
+  This paper explores the development of PokerKit, delving into its features and capabilities, its rigorous testing and validation processes, and its existing and potential applica- tions. Through this comprehensive examination, we aim to underscore PokerKit�s unique contribution to the field of computational poker.
+
+II. RELATED WORK
+  The functionalities of PokerKit primarily fall into two categories: game simulations and hand evaluations. Game simulations encompass creating an environment where poker games can be played out programmatically, simulating real- world scenarios with high fidelity. On the other hand, hand evaluations are concerned with determining the strength of particular poker hands. In this section, we explore notable contributions in these areas, discussing their limitations and illustrating how PokerKit improves upon these existing solu- tions.
+
+A. Game Simulation
+  Poker game logic has been developed for use in numerous online gaming platforms such as PokerStars, GGPoker, and 888Poker. While these implementations effectively serve their intended purposes, they are proprietary and usually support  only a select few variants. Among these, PokerStars distin- guishes itself by offering a broader range of game options [7]�[9].
+  PokerKit, in contrast, supports all major poker variants played on these platforms and much more, at any deck type, betting structure, limit, and optional high/low-split. This wide selection that surpasses the state-of-the-art online poker plat- forms further illustrates the comprehensive nature of PokerKit. On the open-source front, libraries such as poker-holdem- engine and PyPokerEngine have made strides but have consid- erable limitations. They are limited in the number of variants they support and offer less intuitive interfaces. Some rely on networking, while others necessitate the usage of callbacks that return an action based on the game state [3], [4]. This methodology makes it impossible to carry out fine-grained
+
+TABLE I
+SUPPORTED GAME VARIANTS AMONG ONLINE POKER CASINOS [7]�[9] . NOTE THAT �HL8� DENOTES �HIGH/LOW-SPLIT EIGHT OR BETTER� AND �HLR� DENOTES �HIGH/LOW-SPLIT REGULAR�. THE LISTING HERE
+CONTAINS ALL THE VARIANTS DEFINED IN THE 2023 WORLD SERIES OF
+POKER TOURNAMENT RULES [10].
+
+Variants
+PokerKit
+PokerStars
+GGPoker
+888Poker
+Texas hold �em
+yes
+yes
+yes
+yes
+Short-deck hold �em
+yes
+yes
+yes
+no
+Omaha
+yes
+yes
+yes
+yes
+Omaha HL8
+yes
+yes
+no
+yes
+5-Card Omaha HL8
+yes
+yes
+no
+no
+7-card stud
+yes
+yes
+no
+no
+7-card stud HL8
+yes
+yes
+no
+no
+7-card stud HLR
+yes
+no
+no
+no
+Razz
+yes
+yes
+no
+no
+A-to-5 triple draw
+yes
+no
+no
+no
+2-to-7 triple draw
+yes
+yes
+no
+no
+Badugi
+yes
+yes
+no
+no
+Badacey
+yes
+no
+no
+no
+Badeucey
+yes
+no
+no
+no
+2-to-7 single draw
+yes
+yes
+no
+no
+5-card draw
+yes
+yes
+no
+no
+
+TABLE II
+SUPPORTED HAND TYPES AMONG OPEN-SOURCE LIBRARIES [5], [6] .
+
+Hands
+PokerKit
+Deuces
+Treys
+Standard (Texas hold �em, etc.)
+yes
+yes
+yes
+Short-deck
+yes
+no
+no
+Eight-or-better
+yes
+no
+no
+Regular (Razz, etc.)
+yes
+no
+no
+Badugi
+yes
+no
+no
+Kuhn Poker
+yes
+no
+no
+
+
+control over game states, such as bet collection after each street, mandatory card turn-over to prevent chip dumping dur- ing all-ins, showdown order, choice of mucking the best hand (and vice versa), and killing losing hands post-showdown.
+  Comparatively, the Python chess engine, python-chess, of- fers an exemplary model. It allows users to interact program- matically with games through function calls [11]. PokerKit  emulates this style by providing an intuitive programmatic API to verify, query, and apply various operations.
+
+B. Hand Evaluation
+  While it is not the primary focus of the library, PokerKit  also provides facilities for evaluating poker hands. These tools support a greater number of hand types than those offered    by alternative open-source libraries such as Deuces and Treys [5], [6], as shown in TableII. Just like variants for game simulation, the end user may extend the existing framework   to add their own hand type for their custom variants.
+
+III. FEATURES AND CAPABILITIES
+A. Game Simulation
+  Each poker variant often introduces unique game rules and hand types not seen  in  other  variants  [10].  The  versatility of PokerKit allows for the customization of poker variants,  allowing users to define their own unique games, adapt an existing variant, or implement a variant not currently supported by PokerKit out of the box. This flexibility is achieved
+
+without compromising the robustness of the implementation, backed by extensive unit tests and doctests to ensure error-  free operations. Naturally, common variants come pre-defined in the PokerKit package, so, for most use cases, users will not have to define their own variants. An example of user-defined variant is shown in Figure1.
+  PokerKit stands out with its ability to cater to an assortment of use cases, offering varying degrees of control over the game state. For instance, in use cases for poker AI agent develop- ment, where the agents� focus lies primarily in action selection during betting rounds, minute details such as showdown order, posting blinds, posting antes, and bet collection may not be pertinent. On the other hand, an online poker casino requires granular control over each game aspect. These include dealing hole cards one by one, burning cards, deciding to muck or show during the showdown (even when unnecessary), killing hands after the showdown, pushing chips to the winner�s stack, and even the winner collecting the chips into their stack. PokerKit rises to this challenge, providing users with varying levels of automation tailored to their specific needs.
+  1) The First Televised Million-dollar All-in Pot: To demon- strate PokerKit, The first televised million-dollar all-in pot in poker history, played between professional poker players Tom Dwan and Phil Ivey,  is recreated in Figure2[12]. Note that,  for the sake of conciseness in the following examples, opera- tions like ante/blind posting, bet collection, showdown, hand killing, chip pushing, and chip pulling were configured to be automated. However, users have the option to manually invoke these operations by disabling the corresponding automation.
+
+B. Hand Evaluation
+  Beyond its use of providing a simulated poker environment, PokerKit serves as a valuable resource for evaluating poker hands. The hand evaluation component in PokerKit offers a high-level Pythonic programmatic interface for hand evalu- ation, as demonstrated in Figure3. It supports the largest selection of hand types in any mainstream open-source poker library, and can easily be extended to support custom hand types. This makes it an invaluable tool for users interested in studying the statistical properties of poker, regardless of their interest in game simulations.
+
+IV. DESIGN AND IMPLEMENTATION
+A. Game Simulation
+  PokerKit�s poker simulations are architected around the concept of states, encapsulating all the vital information about the current game through its member variables.
+-Cards in deck.
+-Community cards.
+-Mucked cards.
+-Burned cards.
+-Bets
+-Stacks
+-Hole cards
+-Pots (main + side)
+-And more...
+
+
+
+
+
+frompokerkitimport( Automation as A, BettingStructure, Deck, KuhnPokerHand, Opening,
+State, Street,
+)
+
+state = State( #Automations, (
+A.ANTE_POSTING, A.BET_COLLECTION, A.BLIND_OR_STRADDLE_POSTING, A.CARD_BURNING, A.HOLE_DEALING, A.BOARD_DEALING,
+A.HOLE_CARDS_SHOWING_OR_MUCKING, A.HAND_KILLING,
+A.CHIPS_PUSHING, A.CHIPS_PULLING,
+),
+Deck.KUHN_POKER,#Deck (KuhnPokerHand,),#Handtypes #Streets
+(
+Street(
+False,#Cardburning (False,),#Holedealings 0,#Boarddealings False,#Drawcards?
+Opening.POSITION,#Opener 1,#Minbet #Maxnumberofcompletions, #bets,orraises
+None,
+),
+),
+#Bettingstructure BettingStructure.FIXED_LIMIT, True,#Uniformantes?
+(1,) * 2,#Antes
+(0,) * 2,#Blindsorstraddles 0,#Bring-in
+(2,) * 2,#Startingstacks 2,#Numberofplayers
+)
+
+Fig. 1.  An initialization of a Kuhn poker game as a user-defined variant.  Note that split-pot games can be created by specifying multiple hand types: one high and one low.
+
+frompokerkitimport( Automation as A, NoLimitTexasHoldem,
+)
+
+state = NoLimitTexasHoldem.create_state( #Automations
+(
+A.ANTE_POSTING, A.BET_COLLECTION, A.BLIND_OR_STRADDLE_POSTING, A.CARD_BURNING, A.HOLE_CARDS_SHOWING_OR_MUCKING, A.HAND_KILLING,
+A.CHIPS_PUSHING, A.CHIPS_PULLING,
+),
+True,#Uniformantes? 500,#Antes
+(1000, 2000),#Blindsorstraddles 2000,#Min-bet
+#Startingstacks
+(1125600, 2000000, 553500),
+3,#Numberofplayers
+)
+#Pre-flop state.deal_hole("Ac2d")#Ivey #Antonius(holecardsunknown) state.deal_hole("5h7s") state.deal_hole("7h6h")#Dwan #Dwan
+state.complete_bet_or_raise_to(7000) #Ivey state.complete_bet_or_raise_to(23000) state.fold()#Antonius state.check_or_call()#Dwan
+#Flop state.deal_board("Jc3d5c") #Ivey
+state.complete_bet_or_raise_to(35000) state.check_or_call()#Dwan
+#Turn state.deal_board("4h") #Ivey
+state.complete_bet_or_raise_to(90000) #Dwan state.complete_bet_or_raise_to(232600) #Ivey state.complete_bet_or_raise_to(1067100) state.check_or_call()#Dwan
+#River state.deal_board("Jh")
+#Finalstacks:572100,1997500,1109500
+print(state.stacks)
+
+Fig. 2. An example game simulation. Note that the game was created as a pre-defined variant.
+
+
+frompokerkitimport( Card, OmahaHoldemHand,
+)
+
+h0 = OmahaHoldemHand.from_game( "6c7c8c9c",#Holecards "8s9sTc",#Boardcards
+)
+h1 = OmahaHoldemHand("6c7c8s9sTc") print(h0 == h1)#True
+Fig. 3. An example hand evaluation.
+
+
+
+  PokerKit structures the game flow into distinct  phases,  each supporting a different set of operations. Depending on the game state, each  phase  may  be  skipped.  For  instance, if the user has specified no antes,  the  ante  posting  phase  will be omitted. Likewise, if  no  bets  were  placed  during  the betting phase, the bet collection phase will be bypassed.   A phase transition occurs upon the completion of a phase.  This transition is internally managed by the game framework, facilitating a seamless game flow to the end user.
+  During each phase of PokerKit�s game  simulation,  the  user can invoke various methods to execute operations. Each operation belongs to a specific phase and can only be enacted when the corresponding phase is active.
+  1) Ante Posting: During the ante posting phase, each player has the option to execute an ante-posting operation. The parameters supplied to the state during its creation may dictate no antes, uniform antes, or non-uniform antes, such as big blind antes. If no player is due to post an ante, this phase is bypassed.
+  2) Bet Collection: The collection of bets on the table  occurs after any phase that allows players to bet. If any bet    is present, the bet collection operation must be performed before proceeding to the subsequent phase. This phase only occurs after ante posting or betting. When no bets are pending collection, this phase is skipped.
+  3) Blind or Straddle Posting: Forced bets like blinds or straddles must be posted before the start of the first street. PokerKit accommodates a variety of blind or straddle config- urations, ranging from small and big blinds, to button blinds, or even no blind at all. If the state is configured to exclude  any forced bets, this phase is skipped.
+  4) Dealing: The dealing phase precedes a betting phase. During this phase, the user can deal board or hole cards, contingent upon  the  state�s  configuration.  Options  to  burn a card or discard and draw cards are also available when applicable. This phase is bypassed if only one player remains in the hand.
+  5) Betting: During betting, players can execute actions such as folding, checking, calling, posting a bring-in, completing, betting, or raising. During state creation, the user must specify how to select the first player to act and the betting limits. This
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fig. 4. The flowchart of phases in PokerKit.
+
+
+phase is bypassed if all players are all-in or if only one player remains in the hand.
+  6) Showdown: During the showdown, players reveal or muck their hands in accordance with the showdown order.  The first to show is typically the last aggressor in the final street. If no one bet, the player who was the first to act in     the final betting round must show first. Players can opt to show a losing hand or muck a winning hand, even though   this is often disadvantageous. When dealing with all-in pots, players are obligated to show their hands in order to prevent chip-dumping [10]. If this is the case, or if only one player remains in the pot, the showdown phase is bypassed.
+  7) Hand Killing: The dealer is responsible for �killing,� or discarding, hands that cannot win any portion of the pot. If no hand should be killed, this phase is bypassed.
+  8) Chips Pushing: The dealer is charged with pushing the chips to the winners. In poker games, the pot size is always non-zero due to the mandatory presence of antes, forced bets, or bring-ins (as enforced by PokerKit). Thus, this phase is always carried out.
+
+TABLE III
+STATE PHASES AND THEIR CORRESPONDING OPERATIONS.
+
+
+defverify_operation(self, ...):
+...
+ifis_inoperable: raiseValueError("...")
+
+...
+
+defcan_operate(self, ...): try:
+
+
+
+
+
+
+
+
+
+
+TABLE IV
+STATE OPERATIONS AND THEIR AUTOMATABILITIES.
+
+Phases
+Automatable
+Ante posting
+Yes
+Bet collection
+Yes
+Blind or straddle posting
+Yes
+Card burning
+Yes
+Hole dealing
+Yes
+Board Dealing
+Yes
+Standing pat or discarding
+No
+Folding
+No
+Checking or calling
+No
+Bring-in posting
+No
+Completion, betting, or raising to
+No
+Hole cards showing or mucking
+Yes
+Hand killing
+Yes
+Chips pushing
+Yes
+Chips pulling
+Yes
+
+
+  9) Chips Pulling: Players may incorporate the chips they�ve won back into their stack. In poker, at least one player is guaranteed to win the pot. Consequently, this phase is never skipped.
+  Each operation is coupled with two associated methods:      a verification method and an action query. The verification  method validates if a move can be executed within the rules, considering the current game state and the variant in play.        It raises an error if any discrepancy is detected. Users can directly invoke this or use a corresponding action query method (with optional arguments), which simply checks if the verification method triggers an error and returns a boolean value indicating the validity of the action. The method that performs the operation initially runs the verification method, executing the operation only if no errors are raised. If the verification fails, the state remains unchanged.
+  PokerKit�s philosophy is that it should focus on maintaining the game state and enforcing rules. Error handling is left to  the user, who may need to handle errors differently depending on the application. Assertions are used sparingly throughout the library for sanity checks. On runtime, users may choose   to disable them for optimization purposes without impacting the library�s functionalities.
+  The game variant is defined through several attributes, which are as follows:
+     
+self.verify_operation(...) exceptValueError:
+     returnFalse returnTrue
+
+defoperate(self, ...): self.verify_operation(...)
+...
+
+Fig. 5. The method triplets of an example operation.
+
+
+-Deck: Most variants use a 52-card deck.
+-Hand types: Most variants have one, but high/low-split games have two.
+-Streets: Each specifies whether  to  burn  a  card,  deal  the board, deal the players, draw cards, the opener, the minimum bet, and the maximum number of bets or raises.
+-Betting structure: Betting limits such as no-limit, pot- limit, or fixed-limit.
+  This flexibility in the definition gives PokerKit the ability  to describe not only every variant specified in the 2023 World Series of Poker Tournament Rules [10] but also esoteric variants, ranging from Greek hold �em, Kuhn poker, 6-card Omaha, Rhode Island hold �em, and countless more.
+  In addition to the parameters related to the variants, users can supply additional values, namely automations, antes (uni- form antes or non-uniform antes such as big blind antes), blinds/straddles, bring-ins, and starting stacks.
+
+B. Hand Evaluation
+  Hand evaluation is another vital aspect of PokerKit. The library generates a lookup table for each hand type. The hands are generated in the order or reverse order of strength and assigned indices, which are used to compare hands. High-level interfaces allow users to construct hands by passing in the necessary cards and using standard comparison operators to compare the hand strengths. It�s worth noting that �strength� in poker hands does not necessarily mean �low� or �high� hands [13]. Each hand type in PokerKit handles this distinction internally, making it transparent to the end user.
+  In the lookup process, cards are converted into unique integers that represent their ranks. Each rank corresponds to a unique prime number and the converted integers are multiplied together. The suitedness of the cards is then checked. Using the product and the suitedness, the library looks for the matching hand entries which are then used to compare hands. This perfect hashing approach was originally employed in the
+
+TABLE V
+HAND TYPES AND THEIR LOOKUP TABLES IN POKERKIT [6]
+
+Hand types
+Lookups
+Table size
+Standard high
+
+Standard
+
+7462
+Standard low
+
+
+Greek hold �em
+
+
+Omaha hold �em
+
+
+Eight-or-better low
+Eight-or-better
+112
+Omaha eight-or-better low
+
+
+Short-deck hold �em
+Short-deck hold �em
+1404
+Regular low
+Regular
+7462
+Badugi
+Badugi
+1092
+Kuhn poker
+Kuhn poker
+3
+
+TABLE VI
+THE GAME SIMULATION SPEED OF POKERKIT.
+
+
+PokerKit
+Speed (# games/s)
+847.31
+
+Deuces hand evaluation library and is also used by Treys [5], [6].
+V. PERFORMANCE BENCHMARKS
+
+TABLE VII
+THE HAND EVALUATION SPEEDS OF POKERKIT AND TREYS [6].
+
+
+PokerKit
+Treys
+Speed (# hands/s)
+1016740.7
+3230966.4
+
+
+A. Static Type Checking
+  While Python is a dynamically typed language, it also provides an option to write type annotations  in  the  code  [15]. Mypy, a static type checker for Python, is utilized to scrutinize the PokerKit project [16]. All the code in PokerKit successfully passes the Mypy static type checking with the �--strict� flag.
+
+B. Doctests
+  Docstrings serve a dual purpose of providing not only documentation and sample usage but also tests [17]. Most classes and methods within the library are accompanied by example usages in doctests that illustrate their functionality. Furthermore, these doctests offer insight into potential sce-  narios where errors are raised, helping users understand the
+
+  The benchmarks in this section were conducted using a computer equipped with a 12th Gen Intel� Core� i7-1255U processor and 16 GB of RAM, utilizing Python version 3.11.5. Note that the specific values reported here reflect the perfor- mance under this particular hardware and software setup and
+may vary on different systems.
+
+A. Game Simulation
+  The general performance of the game simulation component of PokerKit has been evaluated by digitalizing all 83 televised hands from the final table of the  2023  World  Series  of  Poker (WSOP) $50,000 Poker Players Championship, shown in TableVI. The selection of this particular tournament was motivated by its varying number of players (as the finalists were eliminated), and its rotation through nine different diverse variants of poker [14].
+B. Hand Evaluation
+  The hand evaluation facilities in PokerKit sacrifice slight speed to provide an intuitive high-level interface. As a result, PokerKit�s hand evaluation suite is slower than open-source Python hand evaluation libraries such as Treys as shown in TableVII[6]. Note that the Deuces library, another popular alternative, is not benchmarked as it lacks Python 3 support and Treys is a fork of Deuces that supports Python 3 [5], [6].
+  For the benchmarking process, we iterated through all possible Texas hold �em hands in both PokerKit and Treys. The speeds are reported as the number of hands evaluated per second.
+VI. TESTING AND VALIDATION
+  Ensuring robustness and error-free operation has  been  a top priority throughout PokerKit�s development. To validate  its functionality, a variety of rigorous testing methods were employed, spanning from extensive doctests to unit tests, and recreating renowned poker hands and games.
+
+library�s expected behavior under various circumstances.
+
+C. Unit Tests
+  Unit tests are employed to test broader functionalities that do not fall into normal usage patterns. For example, some      of the unit tests evaluate all possible hand for each lookup   and validates the hands by comparing them against the results from other poker hand evaluation libraries. For efficiency, this is achieved by obtaining an MD5 checksum of the large text string of ordered hands generated by the lookup tables in PokerKit and other open-source libraries.
+  One of the methods of validating PokerKit has been the recreation of various famous poker hands and games. This includes all 83 televised hands from the final table of the  2023 World Series of Poker (WSOP) $50,000 Poker Players Championship which features poker games of nine different variants [14]. The library was tested for consistency, ensuring that pot values after each street and resulting stacks after the hand is over accurately match the real outcomes.
+  Additional unit tests were implemented to rigorously scru- tinize PokerKit�s behavior under unusual circumstances like scenarios involving extremely low starting stacks that often fall below the blinds or antes.
+  Together, the doctests and unit tests cover 99% of the PokerKit codebase, ensuring a comprehensive examination.
+  In conclusion, through the diligent application of static type checking, doctests, unit tests, and recreations of real-life hands, PokerKit has undergone thorough testing and validation. This rigorous approach guarantees that the library can dependably handle a wide array of  poker  game  scenarios,  solidifying  its position as an invaluable resource for researchers and developers in the field.
+VII. USE CASES AND APPLICATIONS
+  Thanks to its flexible architecture and fine-grained control, PokerKit is adaptable to a wide array of tasks. It proves
+
+to be an effective tool in various applications, ranging from  AI development and poker tool creation to serving as the backbone of online poker platforms. This  section  explores key use cases where PokerKit has demonstrated its invaluable contributions.
+
+A. AI Development
+  The continuous action space and the imperfect information nature inherent to poker present a compelling challenge for AI. Most of the breakthroughs in Poker AI agents were limited    to Texas hold �em variants [1], [2]. PokerKit�s capacity to support a comprehensive set of poker variants, coupled with its robust and error-free nature, makes it an ideal framework for developing, testing, and benchmarking poker AI models that can generalize beyond Texas hold�em. Its design, which allows for the automation of irrelevant operations, facilitates the simulation of numerous game scenarios needed for effective AI training and evaluation. Furthermore, its benchmarked speed is adequate for various AI applications.
+  One popular domain of computer poker is the development of poker solvers. Generally, solvers like PIOSolver begin with a game tree construction, which is then  followed  by  the  more computationally intensive Nash equilibrium calculation [18]. PokerKit can be leveraged during this initial game tree construction while the Nash equilibrium calculation can be carried out in more performant languages such as C or C++. It�s worth noting that during the game tree construction, the sequence of possible actions is independent of the cards dealt. This intrinsic characteristic provides ample opportunities for developers to implement optimizations and reduce the runtime by orders of magnitude.
+
+B. Poker Tool Development
+  PokerKit lays a solid foundation for the development of various poker tools, including hand equity calculators and poker training software. With its extensive support for most major poker variants, developers are empowered to create tools that cater to a broad spectrum of poker games. Further, PokerKit�s efficient hand evaluation capability and its intuitive programmatic API enable the development of user-friendly, performance-optimized tools.
+
+C. Online Poker Platform Development
+  The application of PokerKit extends beyond research and tool development; it�s equally effective in creating online poker platforms. Its capacity to simulate the intricate changes of the poker table makes it ideal for the smooth gameplay experience demanded in online poker rooms.
+  In summary, whether it�s developing sophisticated AI mod- els, creating intuitive poker tools, or providing a reliable basis for online poker platforms, PokerKit�s versatile capabilities make it well-suited to a wide array of applications in the poker landscape.
+VIII. 
+CONCLUSION
+  This paper presents PokerKit, a versatile and efficient Python library for poker game simulation and hand evaluation. By providing support for various major poker variants, Pok- erKit ensures a comprehensive and accurate implementation of poker game logic and hand evaluation mechanisms.
+  A key strength of PokerKit is its intuitive design, which allows for both manual and automatic control over game states, facilitating its application in diverse contexts. The library�s built-in unit tests and doctests ensure the robustness of its implementation, while its use in real-world projects provides   a testimony of its reliability.
+  Despite PokerKit�s extensive functionality, there are still exciting prospects for future work in the world of computer poker. Notably, the absence of a standardized interface for Poker AI, similar to the Universal Chess Interface, presents an opportunity for development. While the PIOSolver team has created a Universal Poker Interface, it does not adequately represent the broad scope of poker or poker AI due to its specialized commands and parameters for its Nash equilibrium solving algorithm and its two-player limitation [18]. A stan- dardized interface catering to a variety of AI methodologies could substantially enhance the efficiency and interoperability of poker AI development.
+  In conclusion, PokerKit  presents  a  valuable  contribution to the field of computer poker, offering  a  comprehensive  and efficient toolkit for poker game simulation and hand evaluation. Future work, including the creation of a universal poker AI interface, holds the promise of further enriching the field.
+
+IX. ACKNOWLEDGEMENT
+  We acknowledge the use of ChatGPT, based on GPT-4, an AI language model, in order to enhance the readability of the paper [19].
+
+REFERENCES
+[1]M.  Morav  c?�?k,  M.  Schmid,  N.  Burch,  V.  Lisy�,  D.  Morrill,  N.  Bard,
+T. Davis, K. Waugh, M. Johanson, and M. Bowling, �Deepstack: Expert-level artificial intelligence in heads-up no-limit poker,� Science, vol. 356, no. 6337, pp. 508�513, 2017. [Online]. Available: https://www.science.org/doi/abs/10.1126/science.aam6960
+[2]N. Brown and T. Sandholm, �Superhuman ai for multiplayer poker,� Science, vol. 365, no. 6456, pp. 885�890, 2019. [Online]. Available: https://www.science.org/doi/abs/10.1126/science.aay2400
+[3]B. Scopelliti, �brunoscopelliti/poker-holdem-engine: Texas  hold�em poker engine,� 2023, accessed: 2023-08-04. [Online]. Available: https://github.com/brunoscopelliti/poker-holdem-engine
+[4]ishikota, �Ishikota/pypokerengine: Poker engine for poker ai  development in python,� 2023, accessed: 2023-08-04. [Online].
+Available:https://github.com/ishikota/PyPokerEngine
+[5]W. Drevo, �Worldveil/deuces: A pure python poker hand evaluation library,� 2023, accessed: 2023-08-04. [Online]. Available:https:
+//github.com/worldveil/deuces
+[6]W. Drevo, I. Hendley, and M. Saindon, �Ihendley/treys: A pure python poker hand evaluation library,� 2023, accessed: 2023-08-04. [Online].
+Available:https://github.com/ihendley/treys
+[7]PokerStars, �Poker games,� 2023, accessed: 2023-08-04. [Online].
+Available:https://www.pokerstars.com/poker/games/
+[8]C.	Zetzsche,	�Ggpoker	in	2022:	Where	is	the	new industry giant heading?� PokerFuse,  feb  2022,  accessed:  2023-  08-04. [Online]. Available:https://pokerfuse.com/features/in-depth/ 217163-ggpoker-2022-predictions-online-poker-giant/
+
+[9]888poker, �Poker games,� 2023, accessed: 2023-08-04. [Online].
+Available:https://www.888poker.com/poker-games/
+[10]World   Series   of    Poker,    �2023    world    series    of    poker� official	tournament	rules,�	Paris	Las	Vegas	Hotel	and Casino  and   Horseshoe   Las   Vegas   Hotel   and   Casino,   Las   Vegas, Nevada, 2023, accessed: 2023-08-04. [Online]. Available: https://www.wsop.com/2022/2023-WSOP-Tournament-Rules.pdf
+[11]N. Fiekas, �python-chess: a chess library for python,� 2023, accessed: 2023-08-04. [Online]. Available:https://python-chess.readthedocs.io/en/ stable/
+[12]P. Seaton, �Poker  moments:  Phil  ivey,  tom  dwan  and  the million-dollar pot,� PokerNews, nov 2018, accessed: 2023-08-
+04. [Online]. Available:https://www.pokernews.com/news/2018/11/ poker-moments-phil-ivey-tom-dwan-million-dollar-pot-32706.htm
+[13]World Series of Poker, �2023 world series of  poker�  official  live  action rules,� Paris Las Vegas Hotel, Las Vegas, Nevada, 2023, accessed: 2023-08-04. [Online]. Available:https://www.wsop.com/ 2023/2023-WSOP-Live-Action-Rules.pdf
+[14]C. Zetzsche, �Brian rast wins $50,000 poker players championship for  the third time ($1,324,747),� PokerNews, jun 2023, accessed: 2023- 08-04. [Online]. Available:https://www.pokernews.com/news/2023/06/ brian-rast-wins-ppc-for-third-time-43877.htm
+[15]G.   van   Rossum,   J.   Lehtosalo,   and   L.   Langa,    �Pep    484    � type hints,� sep 2014, accessed: 2023-08-04. [Online]. Available: https://peps.python.org/pep-0484/
+[16]J. Lehtosalo and mypy contributors, �Welcome  to  mypy documentation!� 2023, accessed: 2023-08-04. [Online]. Available: https://mypy.readthedocs.io/en/stable/
+[17] Python Software Foundation, �doctest � test interactive python examples,� 2023, accessed: 2023-08-04. [Online]. Available:https:
+//docs.python.org/3/library/doctest.html
+[18] PioSolver, �Piosolver 2.0 upi documentation,� 2021, accessed: 2023-08-
+   04. [Online]. Available:https://piofiles.com/docs/upi documentation/ [19]OpenAI, �Gpt-4 technical report,� 2023.
+
+
+## CODE PYTHON GYM ENV POKER 6 PLAYERS NO LIMIT HOLDEM
+
+import gym
+from gym import spaces
+from pokerkit import Card, Deck, Hand, Table, Player, NoLimitTexasHoldem
+
+class PokerEnv(gym.Env):
+    def __init__(self):
+        super(PokerEnv, self).__init__()
+        
+        self.game = NoLimitTexasHoldem(player_count=6)
+        self.state = self.game.create_state()
+        
+        self.action_space = spaces.Discrete(4)  # 0: fold, 1: check, 2: call, 3: raise
+        self.observation_space = spaces.Box(low=0, high=1, shape=(...,), dtype=float)
+        
+    def reset(self):
+        self.state = self.game.create_state()
+        return self._get_observation()
+        
+    def step(self, action):
+        # Implementazione completa della logica del gioco
+        # ...
+        
+        done = False  # Implementare la logica per determinare se il gioco è finito
+        reward = 0  # Implementare la logica per calcolare il reward
+        
+        return self._get_observation(), reward, done, {}
+        
+    def _get_observation(self):
+        # Implementare la logica per ottenere l'osservazione dallo stato corrente
+        return ...
+        
+    def render(self, mode='human'):
+        # Implementare la logica per la visualizzazione del gioco
+        pass
+
+# Creazione di un'istanza dell'ambiente
+env = PokerEnv()
+
+# Loop di gioco
+done = False
+obs = env.reset()
+while not done:
+    action = env.action_space.sample()  # Sostituire con la logica dell'agente
+    obs, reward, done, info = env.step(action)
