@@ -9,17 +9,12 @@ from itertools import chain, combinations
 from typing import Any
 
 from pokerkit.lookups import (
-    BadugiLookup,
-    EightOrBetterLookup,
     Entry,
-    KuhnPokerLookup,
     Lookup,
     RegularLookup,
-    ShortDeckHoldemLookup,
     StandardLookup,
 )
-from pokerkit.utilities import Card, CardsLike, RankOrder
-
+from pokerkit.utilities import Card, CardsLike
 
 @total_ordering
 class Hand(Hashable, ABC):
@@ -141,7 +136,6 @@ class Hand(Hashable, ABC):
         """
         return self.lookup.get_entry(self.cards)
 
-
 class CombinationHand(Hand, ABC):
     """The abstract base class for combination hands."""
 
@@ -223,13 +217,11 @@ class CombinationHand(Hand, ABC):
 
         return max_hand
 
-
 class StandardHand(CombinationHand, ABC):
     """The abstract base class for standard hands."""
 
     lookup = StandardLookup()
     card_count = 5
-
 
 class StandardHighHand(StandardHand):
     """The class for standard high hands.
@@ -258,7 +250,6 @@ class StandardHighHand(StandardHand):
 
     low = False
 
-
 class StandardLowHand(StandardHand):
     """The class for standard low hands.
 
@@ -285,102 +276,6 @@ class StandardLowHand(StandardHand):
     """
 
     low = True
-
-
-class ShortDeckHoldemHand(CombinationHand):
-    """The class for short-deck hold'em hands.
-
-    Here, flushes beat full houses.
-
-    >>> h0 = ShortDeckHoldemHand('6c7d8h9sJc')
-    >>> h1 = ShortDeckHoldemHand('7c7d7hTsQc')
-    >>> h2 = ShortDeckHoldemHand('As6c7h8h9h')
-    >>> h3 = ShortDeckHoldemHand('AsAhKcKhKd')
-    >>> h4 = ShortDeckHoldemHand('6s7s8sTsQs')
-    >>> h0 < h1 < h2 < h3 < h4
-    True
-
-    >>> h = ShortDeckHoldemHand('4c5dThJsAcKh2h')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand '4c5dThJsAcKh2h'
-    >>> h = ShortDeckHoldemHand('Ac2c3c4c5c')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'Ac2c3c4c5c'
-    >>> h = ShortDeckHoldemHand(())
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand ''
-    """
-
-    lookup = ShortDeckHoldemLookup()
-    low = False
-    card_count = 5
-
-
-class EightOrBetterLowHand(CombinationHand):
-    """The class for eight or better low hands.
-
-    >>> h0 = EightOrBetterLowHand('8c7d6h4s2c')
-    >>> h1 = EightOrBetterLowHand('7c5d4h3s2c')
-    >>> h2 = EightOrBetterLowHand('5d4h3s2dAd')
-    >>> h0 < h1 < h2
-    True
-
-    >>> h = EightOrBetterLowHand('AcAsAd2s4s')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'AcAsAd2s4s'
-    >>> h = EightOrBetterLowHand('TsJsQsKsAs')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'TsJsQsKsAs'
-    >>> h = EightOrBetterLowHand('4c5dThJsAcKh2h')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand '4c5dThJsAcKh2h'
-    >>> h = EightOrBetterLowHand('Ac2c3c4c')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'Ac2c3c4c'
-    >>> h = EightOrBetterLowHand(())
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand ''
-    """
-
-    lookup = EightOrBetterLookup()
-    low = True
-    card_count = 5
-
-
-class RegularLowHand(CombinationHand):
-    """The class for low regular hands.
-
-    Here, flushes are ignored.
-
-    >>> h0 = RegularLowHand('KhKsKcKdAc')
-    >>> h1 = RegularLowHand('2s2c3s3cAh')
-    >>> h2 = RegularLowHand('6c4d3h2sAc')
-    >>> h3 = RegularLowHand('Ac2c3c4c5c')
-    >>> h0 < h1 < h2 < h3
-    True
-
-    >>> h = RegularLowHand('4c5dThJsAcKh2h')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand '4c5dThJsAcKh2h'
-    >>> h = RegularLowHand(())
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand ''
-    """
-
-    lookup = RegularLookup()
-    low = True
-    card_count = 5
-
 
 class BoardCombinationHand(CombinationHand, ABC):
     """The abstract base class for board-combination hands."""
@@ -433,28 +328,6 @@ class BoardCombinationHand(CombinationHand, ABC):
             raise ValueError('no valid hand')
 
         return max_hand
-
-
-class GreekHoldemHand(BoardCombinationHand):
-    """The class for Greek hold'em hands.
-
-    In Greek hold'em, the player must use all of his or her hole cards
-    to make a hand.
-
-    >>> h0 = GreekHoldemHand('7c5d4h3s2c')
-    >>> h1 = GreekHoldemHand('7c6d4h3s2c')
-    >>> h2 = GreekHoldemHand('8c7d6h4s2c')
-    >>> h3 = GreekHoldemHand('AcAsAd2s4s')
-    >>> h4 = GreekHoldemHand('TsJsQsKsAs')
-    >>> h0 < h1 < h2 < h3 < h4
-    True
-    """
-
-    lookup = StandardLookup()
-    low = False
-    card_count = 5
-    board_card_count = 3
-
 
 class HoleBoardCombinationHand(BoardCombinationHand, ABC):
     """The abstract base class for hole-board-combination hands."""
@@ -520,171 +393,3 @@ class HoleBoardCombinationHand(BoardCombinationHand, ABC):
             raise ValueError('no valid hand')
 
         return max_hand
-
-
-class OmahaHoldemHand(HoleBoardCombinationHand):
-    """The class for Omaha hold'em hands.
-
-    In Omaha hold'em, the player must use a fixed number of his or her
-    hole cards to make a hand.
-
-    >>> h0 = OmahaHoldemHand('7c5d4h3s2c')
-    >>> h1 = OmahaHoldemHand('7c6d4h3s2c')
-    >>> h2 = OmahaHoldemHand('8c7d6h4s2c')
-    >>> h3 = OmahaHoldemHand('AcAsAd2s4s')
-    >>> h4 = OmahaHoldemHand('TsJsQsKsAs')
-    >>> h0 < h1 < h2 < h3 < h4
-    True
-    """
-
-    lookup = StandardLookup()
-    low = False
-    card_count = 5
-    board_card_count = 3
-    hole_card_count = 2
-
-
-class OmahaEightOrBetterLowHand(HoleBoardCombinationHand):
-    """The class for Omaha eight or better low hands.
-
-    >>> h0 = OmahaEightOrBetterLowHand('8c7d6h4s2c')
-    >>> h1 = OmahaEightOrBetterLowHand('7c5d4h3s2c')
-    >>> h2 = OmahaEightOrBetterLowHand('5d4h3s2dAd')
-    >>> h0 < h1 < h2
-    True
-    """
-
-    lookup = EightOrBetterLookup()
-    low = True
-    card_count = 5
-    board_card_count = 3
-    hole_card_count = 2
-
-
-class BadugiHand(Hand):
-    """The class for badugi hands.
-
-    >>> h0 = BadugiHand('Kc')
-    >>> h1 = BadugiHand('Ac')
-    >>> h2 = BadugiHand('4c8dKh')
-    >>> h3 = BadugiHand('Ac2d3h5s')
-    >>> h4 = BadugiHand('Ac2d3h4s')
-    >>> h0 < h1 < h2 < h3 < h4
-    True
-
-    >>> h = BadugiHand('Ac2d3c4s5c')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'Ac2d3c4s5c'
-    >>> h = BadugiHand('Ac2d3c4s')
-    Traceback (most recent call last):
-        ...
-    ValueError: cards not rainbow
-    >>> h = BadugiHand('AcAd3h4s')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'AcAd3h4s'
-    >>> h = BadugiHand('Ac2c')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'Ac2c'
-    >>> h = BadugiHand(())
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand ''
-    """
-
-    lookup = BadugiLookup()
-    low = True
-
-    @classmethod
-    def from_game(
-            cls,
-            hole_cards: CardsLike,
-            board_cards: CardsLike = None,
-    ) -> Hand:
-        """Create a poker hand from a game setting.
-
-        In a game setting, a player uses private cards from their hole
-        and the public cards from the board to make their hand.
-
-        >>> h0 = BadugiHand.from_game('2s4c5d6h')
-        >>> h1 = BadugiHand('2s4c5d6h')
-        >>> h0 == h1
-        True
-        >>> h0 = BadugiHand.from_game('2s3s4d7h')
-        >>> h1 = BadugiHand('2s4d7h')
-        >>> h0 == h1
-        True
-        >>> h0 = BadugiHand.from_game('KcKdKhKs')
-        >>> h1 = BadugiHand('Ks')
-        >>> h0 == h1
-        True
-
-        :param hole_cards: The hole cards.
-        :param board_cards: The optional board cards.
-        :return: The strongest hand from possible card combinations.
-        """
-        ranks = set()
-        suits = set()
-        cards = set()
-
-        for card in sorted(
-                chain(Card.clean(hole_cards), Card.clean(board_cards)),
-                key=lambda card: RankOrder.STANDARD.index(card.rank),
-        ):
-            if card.rank not in ranks and card.suit not in suits:
-                ranks.add(card.rank)
-                suits.add(card.suit)
-                cards.add(card)
-
-        return cls(cards)
-
-    def __init__(self, cards: CardsLike) -> None:
-        super().__init__(cards)
-
-        if not Card.are_rainbow(self.cards):
-            raise ValueError('cards not rainbow')
-
-
-class KuhnPokerHand(Hand):
-    """The class for Kuhn poker hands.
-
-    >>> h0 = KuhnPokerHand('Js')
-    >>> h1 = KuhnPokerHand('Qs')
-    >>> h2 = KuhnPokerHand('Ks')
-    >>> h0 < h1 < h2
-    True
-
-    >>> h = KuhnPokerHand('As')
-    Traceback (most recent call last):
-        ...
-    ValueError: invalid hand 'As'
-    """
-
-    lookup = KuhnPokerLookup()
-    low = False
-
-    @classmethod
-    def from_game(
-            cls,
-            hole_cards: CardsLike,
-            board_cards: CardsLike = None,
-    ) -> Hand:
-        """Create a poker hand from a game setting.
-
-        In a game setting, a player uses private cards from their hole
-        and the public cards from the board to make their hand.
-
-        >>> h0 = KuhnPokerHand.from_game('Ks')
-        >>> h1 = KuhnPokerHand('Ks')
-        >>> h0 == h1
-        True
-
-        :param hole_cards: The hole cards.
-        :param board_cards: The optional board cards.
-        :return: The strongest hand from possible card combinations.
-        """
-        return max(
-            map(cls, chain(Card.clean(hole_cards), Card.clean(board_cards))),
-        )

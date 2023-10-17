@@ -44,7 +44,6 @@ class BettingStructure(StrEnum):
     NO_LIMIT = 'No-limit'
     """The no-limit."""
 
-
 @unique
 class Opening(StrEnum):
     """The enum class for openings.
@@ -72,7 +71,6 @@ class Opening(StrEnum):
     """The opener is decided by having the highest exposed hand, then
     position.
     """
-
 
 @dataclass
 class _LowHandOpeningLookup(Lookup):
@@ -115,7 +113,6 @@ class _LowHandOpeningLookup(Lookup):
             Label.FOUR_OF_A_KIND,
         )
 
-
 @dataclass
 class _HighHandOpeningLookup(Lookup):
     def __post_init__(self) -> None:
@@ -156,7 +153,6 @@ class _HighHandOpeningLookup(Lookup):
             (False,),
             Label.FOUR_OF_A_KIND,
         )
-
 
 @dataclass(frozen=True)
 class Street:
@@ -277,7 +273,6 @@ class Street:
                 'raisings',
             )
 
-
 @unique
 class Automation(StrEnum):
     """The enum class for automation.
@@ -308,7 +303,6 @@ class Automation(StrEnum):
     """The chips pushing automation."""
     CHIPS_PULLING = 'Chips pulling'
     """The chips pulling automation."""
-
 
 @dataclass(frozen=True)
 class Pot:
@@ -341,13 +335,11 @@ class Pot:
         elif not self.player_indices:
             raise ValueError('empty player indices')
 
-
 @dataclass
 class Operation(ABC):
     """The abstract base class for operations."""
 
     pass
-
 
 @dataclass
 class AntePosting(Operation):
@@ -357,7 +349,6 @@ class AntePosting(Operation):
     """The player index."""
     amount: int
     """The amount."""
-
 
 @dataclass
 class BetCollection(Operation):
@@ -378,7 +369,6 @@ class BetCollection(Operation):
         """
         return sum(self.bets)
 
-
 @dataclass
 class BlindOrStraddlePosting(Operation):
     """The class for blind or straddle postings."""
@@ -388,14 +378,12 @@ class BlindOrStraddlePosting(Operation):
     amount: int
     """The amount."""
 
-
 @dataclass
 class CardBurning(Operation):
     """The class for card burnings."""
 
     card: Card
     """The card."""
-
 
 @dataclass
 class HoleDealing(Operation):
@@ -408,14 +396,12 @@ class HoleDealing(Operation):
     statuses: tuple[bool, ...]
     """The statuses."""
 
-
 @dataclass
 class BoardDealing(Operation):
     """The class for board dealings."""
 
     cards: tuple[Card, ...]
     """The cards."""
-
 
 @dataclass
 class StandingPatOrDiscarding(Operation):
@@ -426,14 +412,12 @@ class StandingPatOrDiscarding(Operation):
     cards: tuple[Card, ...]
     """The cards."""
 
-
 @dataclass
 class Folding(Operation):
     """The class for foldings."""
 
     player_index: int
     """The player index."""
-
 
 @dataclass
 class CheckingOrCalling(Operation):
@@ -444,7 +428,6 @@ class CheckingOrCalling(Operation):
     amount: int
     """The amount."""
 
-
 @dataclass
 class BringInPosting(Operation):
     """The class for bring-in postings."""
@@ -453,7 +436,6 @@ class BringInPosting(Operation):
     """The player index."""
     amount: int
     """The amount."""
-
 
 @dataclass
 class CompletionBettingOrRaisingTo(Operation):
@@ -464,7 +446,6 @@ class CompletionBettingOrRaisingTo(Operation):
     amount: int
     """The amount."""
 
-
 @dataclass
 class HoleCardsShowingOrMucking(Operation):
     """The class for hole cards showing or muckings."""
@@ -474,14 +455,12 @@ class HoleCardsShowingOrMucking(Operation):
     status: bool
     """The status."""
 
-
 @dataclass
 class HandKilling(Operation):
     """The class for hand killings."""
 
     player_index: int
     """The player index."""
-
 
 @dataclass
 class ChipsPushing(Operation):
@@ -502,7 +481,6 @@ class ChipsPushing(Operation):
         """
         return sum(self.amounts)
 
-
 @dataclass
 class ChipsPulling(Operation):
     """The class for chips pullings."""
@@ -511,7 +489,6 @@ class ChipsPulling(Operation):
     """The player index."""
     amount: int
     """The amount."""
-
 
 @dataclass
 class State:

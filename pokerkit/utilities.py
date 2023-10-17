@@ -59,7 +59,6 @@ class Rank(StrEnum):
     KING: str = 'K'
     """The rank of Kings."""
 
-
 @unique
 class RankOrder(tuple[Rank, ...], Enum):
     """The enum class for tuples of ranks.
@@ -155,7 +154,6 @@ class RankOrder(tuple[Rank, ...], Enum):
     KUHN_POKER: tuple[Rank, ...] = Rank.JACK, Rank.QUEEN, Rank.KING
     """The Kuhn poker ranks (from jack to king)."""
 
-
 @unique
 class Suit(StrEnum):
     """The enum class for suits.
@@ -187,7 +185,6 @@ class Suit(StrEnum):
     """The suit of hearts."""
     SPADE: str = 's'
     """The suit of spades."""
-
 
 @dataclass(frozen=True)
 class Card:
@@ -396,9 +393,7 @@ class Card:
     def __str__(self) -> str:
         return f'{self.rank.name} OF {self.suit.name}S ({repr(self)})'
 
-
 CardsLike = Iterable[Card] | Card | str | None
-
 
 @unique
 class Deck(tuple[Card, ...], Enum):
@@ -493,7 +488,6 @@ class Deck(tuple[Card, ...], Enum):
     spades.
     """
 
-
 def filter_none(values: Iterable[Any]) -> Any:
     """Filter ``None`` from values.
 
@@ -506,7 +500,6 @@ def filter_none(values: Iterable[Any]) -> Any:
     :return: The filtered values.
     """
     return filter(partial(is_not, None), values)
-
 
 def min_or_none(values: Iterable[Any], key: Any = None) -> Any:
     """Get the minimum value while ignoring ``None`` values.
@@ -527,7 +520,6 @@ def min_or_none(values: Iterable[Any], key: Any = None) -> Any:
     except ValueError:
         return None
 
-
 def max_or_none(values: Iterable[Any], key: Any = None) -> Any:
     """Get the maximum value while ignoring ``None`` values.
 
@@ -547,9 +539,7 @@ def max_or_none(values: Iterable[Any], key: Any = None) -> Any:
     except ValueError:
         return None
 
-
 ValuesLike = Iterable[int] | Mapping[int, int] | int | None
-
 
 def clean_values(values: ValuesLike, count: int) -> tuple[int, ...]:
     """Clean the integers.
@@ -599,7 +589,6 @@ def clean_values(values: ValuesLike, count: int) -> tuple[int, ...]:
         values = tuple(parsed_values)
 
     return values
-
 
 def shuffled(cards: CardsLike) -> list[Card]:
     """Return the shuffled cards.

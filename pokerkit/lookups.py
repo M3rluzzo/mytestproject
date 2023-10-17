@@ -44,7 +44,6 @@ class Label(StrEnum):
     STRAIGHT_FLUSH: str = 'Straight flush'
     """The label of straight flush."""
 
-
 @dataclass(order=True, frozen=True)
 class Entry:
     """The class for hand lookup entries.
@@ -81,7 +80,6 @@ class Entry:
     """The index of the corresponding hand."""
     label: Label = field(compare=False)
     """The label of the corresponding hand."""
-
 
 @dataclass
 class Lookup(ABC):
@@ -255,7 +253,6 @@ class Lookup(ABC):
         for suitedness in suitednesses:
             self.__entries[hash_, suitedness] = entry
 
-
 @dataclass
 class StandardLookup(Lookup):
     """The class for standard hand lookups.
@@ -330,105 +327,6 @@ class StandardLookup(Lookup):
             Label.STRAIGHT_FLUSH,
         )
 
-
-@dataclass
-class ShortDeckHoldemLookup(Lookup):
-    """The class for short-deck hold'em hand lookups.
-
-    Here, flushes beat full houses.
-
-    Lookups are used by evaluators. If you want to evaluate poker hands,
-    please use :class:`pokerkit.hands.ShortDeckHoldemHand`.
-
-    >>> lookup = ShortDeckHoldemLookup()
-    >>> e0 = lookup.get_entry('AhAc6s6hTd')
-    >>> e1 = lookup.get_entry('Ah6h7s8c9s')
-    >>> e2 = lookup.get_entry('Ah2h3s4c5s')
-    Traceback (most recent call last):
-        ...
-    ValueError: cards form an invalid hand
-    >>> e0 < e1
-    True
-    >>> e0.label
-    <Label.TWO_PAIR: 'Two pair'>
-    >>> e1.label
-    <Label.STRAIGHT: 'Straight'>
-    """
-
-    def __post_init__(self) -> None:
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({1: 5}),
-            (False,),
-            Label.HIGH_CARD,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({2: 1, 1: 3}),
-            (False,),
-            Label.ONE_PAIR,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({2: 2, 1: 1}),
-            (False,),
-            Label.TWO_PAIR,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({3: 1, 1: 2}),
-            (False,),
-            Label.THREE_OF_A_KIND,
-        )
-        self._add_straights(
-            RankOrder.SHORT_DECK_HOLDEM,
-            5,
-            (False,),
-            Label.STRAIGHT,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({3: 1, 2: 1}),
-            (False,),
-            Label.FULL_HOUSE,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({1: 5}),
-            (True,),
-            Label.FLUSH,
-        )
-        self._add_multisets(
-            RankOrder.SHORT_DECK_HOLDEM,
-            Counter({4: 1, 1: 1}),
-            (False,),
-            Label.FOUR_OF_A_KIND,
-        )
-        self._add_straights(
-            RankOrder.SHORT_DECK_HOLDEM,
-            5,
-            (True,),
-            Label.STRAIGHT_FLUSH,
-        )
-
-
-@dataclass
-class EightOrBetterLookup(Lookup):
-    """The class for eight or better hand lookups.
-
-    Lookups are used by evaluators. If you want to evaluate poker hands,
-    please use :class:`pokerkit.hands.EightOrBetterLowHand`.
-    """
-
-    def __post_init__(self) -> None:
-        self._add_multisets(
-            RankOrder.EIGHT_OR_BETTER_LOW,
-            Counter({1: 5}),
-            (False, True),
-            Label.HIGH_CARD,
-        )
-
-
 @dataclass
 class RegularLookup(Lookup):
     """The class for regular hand lookups.
@@ -489,67 +387,4 @@ class RegularLookup(Lookup):
             Counter({4: 1, 1: 1}),
             (False,),
             Label.FOUR_OF_A_KIND,
-        )
-
-
-@dataclass
-class BadugiLookup(Lookup):
-    """The class for badugi hand lookups.
-
-    Lookups are used by evaluators. If you want to evaluate poker hands,
-    please use :class:`pokerkit.hands.BadugiHand`.
-
-    >>> lookup = BadugiLookup()
-    >>> e0 = lookup.get_entry('2s')
-    >>> e1 = lookup.get_entry('KhQc')
-    >>> e2 = lookup.get_entry('AcAdAhAs')
-    Traceback (most recent call last):
-        ...
-    ValueError: cards form an invalid hand
-    >>> e0 > e1
-    True
-    >>> e0.label
-    <Label.HIGH_CARD: 'High card'>
-    >>> e1.label
-    <Label.HIGH_CARD: 'High card'>
-    """
-
-    def __post_init__(self) -> None:
-        for i in range(4, 0, -1):
-            self._add_multisets(
-                RankOrder.REGULAR,
-                Counter({1: i}),
-                (i == 1,),
-                Label.HIGH_CARD,
-            )
-
-
-@dataclass
-class KuhnPokerLookup(Lookup):
-    """The class for Kuhn poker hand lookups.
-
-    Lookups are used by evaluators. If you want to evaluate poker hands,
-    please use :class:`pokerkit.hands.KuhnPokerHand`.
-
-    >>> lookup = KuhnPokerLookup()
-    >>> e0 = lookup.get_entry('Js')
-    >>> e1 = lookup.get_entry('Qs')
-    >>> e2 = lookup.get_entry('2c')
-    Traceback (most recent call last):
-        ...
-    ValueError: cards form an invalid hand
-    >>> e0 < e1
-    True
-    >>> e0.label
-    <Label.HIGH_CARD: 'High card'>
-    >>> e1.label
-    <Label.HIGH_CARD: 'High card'>
-    """
-
-    def __post_init__(self) -> None:
-        self._add_multisets(
-            RankOrder.KUHN_POKER,
-            Counter({1: 1}),
-            (True,),
-            Label.HIGH_CARD,
         )
