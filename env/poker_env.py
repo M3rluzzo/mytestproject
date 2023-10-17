@@ -8,7 +8,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Action(Enum):
     """Allowed actions"""
-
     FOLD = 0
     CHECK = 1
     CALL = 2
