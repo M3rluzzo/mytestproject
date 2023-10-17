@@ -1519,59 +1519,7 @@ class State:
             previous_contribution = contribution
             amount = 0
 
-    def get_down_cards(self, player_index: int) -> Iterator[Card]:
-        """Return the down cards of the player.
-
-        >>> from pokerkit import FixedLimitSevenCardStud
-        >>> state = FixedLimitSevenCardStud.create_state(
-        ...     (
-        ...         Automation.ANTE_POSTING,
-        ...         Automation.BET_COLLECTION,
-        ...         Automation.BLIND_OR_STRADDLE_POSTING,
-        ...         Automation.CARD_BURNING,
-        ...         Automation.BOARD_DEALING,
-        ...         Automation.HOLE_CARDS_SHOWING_OR_MUCKING,
-        ...         Automation.HAND_KILLING,
-        ...         Automation.CHIPS_PUSHING,
-        ...         Automation.CHIPS_PULLING,
-        ...     ),
-        ...     True,
-        ...     None,
-        ...     1,
-        ...     2,
-        ...     4,
-        ...     (50, 100),
-        ...     2,
-        ... )
-        >>> state.deal_hole('AcAdAh')  # doctest: +ELLIPSIS
-        HoleDealing(player_index=0, cards=(Ac, Ad, Ah), statuses=(False, Fal...
-        >>> state.deal_hole('KcKdKh')  # doctest: +ELLIPSIS
-        HoleDealing(player_index=1, cards=(Kc, Kd, Kh), statuses=(False, Fal...
-        >>> state.get_down_cards(0)  # doctest: +ELLIPSIS
-        <generator object State.get_down_cards at 0x...>
-        >>> tuple(state.get_down_cards(0))
-        (Ac, Ad)
-        >>> tuple(state.get_down_cards(1))
-        (Kc, Kd)
-        >>> state.post_bring_in()
-        BringInPosting(player_index=1, amount=1)
-        >>> state.fold()
-        Folding(player_index=0)
-        >>> tuple(state.get_down_cards(0))
-        ()
-        >>> tuple(state.get_down_cards(1))
-        (Kc, Kd)
-
-        :param player_index: The player index.
-        :return: The down cards of the player.
-        """
-        for card, status in zip(
-                self.hole_cards[player_index],
-                self.hole_card_statuses[player_index],
-        ):
-            if not status:
-                yield card
-
+    
     def get_up_cards(self, player_index: int) -> Iterator[Card]:
         """Return the up cards of the player.
 
