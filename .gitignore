@@ -41,3 +41,15 @@ build
 .travis.yml
 /dist
 *.rst
+*.vscode
+*.pyc
+*.egg-info
+*.p
+*.lprof
+*__pycache__
+*.o
+*.trace
+*.po
+main
+*swp*
+.DS_Store

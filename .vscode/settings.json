@@ -1,0 +1,4 @@
+{
+    "python.analysis.autoImportCompletions": false,
+    "python.defaultInterpreterPath": "~/anaconda3/envs/poker-kit/bin"
+}
