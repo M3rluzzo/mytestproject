@@ -1,16 +1,19 @@
-class TexasHoldemState:
-    def __init__(self, ...):
-        # Inizializza lo stato del gioco
-        pass
+class SpinNGoState:
+    def __init__(self, players, board, pot):
+        self.players = players  # Lista di oggetti giocatore
+        self.board = board  # Carte sul tavolo
+        self.pot = pot  # Somma nel piatto
 
     def valid_actions(self):
-        # Restituisce le azioni valide
-        pass
+        # Restituisce una lista di azioni valide come 'call', 'raise', 'fold'
+        return ['call', 'raise', 'fold']
 
     def take(self, action):
-        # Prende un'azione e restituisce un nuovo stato
-        pass
+        # Implementa la logica per prendere un'azione e restituire un nuovo stato
+        new_state = SpinNGoState(self.players, self.board, self.pot)
+        # Aggiorna new_state in base all'azione
+        return new_state
 
-    def utility(self):
-        # Calcola l'utilità dello stato corrente
-        pass
+    def utility(self, player):
+        # Calcola l'utilità dello stato corrente per un determinato giocatore
+        return 0  # Sostituire con la logica appropriata
